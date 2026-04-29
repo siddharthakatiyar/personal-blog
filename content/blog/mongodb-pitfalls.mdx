@@ -1,0 +1,76 @@
+---
+title: "MongoDB Is Great—Until It Quietly Starts Killing Your System"
+description: "A deep dive into common MongoDB pitfalls when scaling, and how to avoid the 'silent killer' queries that take down production."
+pubDate: "2026-04-10"
+tags: ["mongodb", "database", "scaling", "architecture"]
+---
+
+MongoDB is often praised for its flexibility and developer-friendly document model. It's incredibly easy to get started: just throw a JSON object at it, and boom, it's saved. No migrations, no strict schemas. It feels like magic.
+
+But here's the thing about magic: it has a price. And in production, that price is often paid in **CPU spikes, memory exhaustion, and silent query death spirals**.
+
+Let's talk about what happens when your 'simple' MongoDB cluster starts quietly killing your system, and how you can fix it.
+
+## The "Everything is a Query" Trap
+
+When you start out, `db.users.find({ status: "active" })` is fast. It scans 100 documents and returns 10. 
+
+But fast forward a year. You now have 10 million users. That same query is now a **COLLSCAN (Collection Scan)**. MongoDB has to load every single document into memory to check if the status is active.
+
+### The Warning Signs
+
+1. **High CPU Usage:** Your database CPU is constantly above 80%, even with low traffic.
+2. **Slow Query Log Spikes:** Queries that used to take 10ms now take 2000ms.
+3. **Application Timeouts:** Your API servers start throwing 504 Gateway Timeouts.
+
+## The Solution: Indexes Are Not Optional
+
+The most common mistake is thinking indexes are an "optimization for later." They are a requirement for survival.
+
+Here's how to fix the active users query:
+
+```javascript
+// Create an index on the 'status' field
+db.users.createIndex({ status: 1 });
+```
+
+But wait, it gets more complex. What if you frequently query by both `status` and `createdAt`?
+
+```javascript
+// A compound index is needed here!
+db.users.createIndex({ status: 1, createdAt: -1 });
+```
+
+### Understanding ESR Rule
+
+When designing compound indexes, always remember the **ESR (Equality, Sort, Range)** rule:
+- First, add fields you query for **Equality** (e.g., `status: "active"`).
+- Second, add fields you **Sort** by (e.g., `createdAt: -1`).
+- Finally, add fields you query by **Range** (e.g., `age: { $gt: 18 }`).
+
+## The Unbounded Array Problem
+
+Another silent killer is the unbounded array. Because MongoDB is schema-less, it's tempting to push everything into an array within a single document.
+
+```javascript
+// BAD PATTERN
+{
+  _id: "user_123",
+  name: "Siddhartha",
+  activityLogs: [
+    { action: "login", date: "..." },
+    { action: "view", date: "..." },
+    // ... 10,000 items later
+  ]
+}
+```
+
+As this document grows, it exceeds the 16MB limit, but more importantly, every update requires MongoDB to move the entire document on disk. This causes massive fragmentation and slows down all operations.
+
+**Fix:** Use the Outlier Pattern or keep unbounded arrays in a separate collection referencing the parent document.
+
+## Conclusion
+
+MongoDB is a powerful tool, but its flexibility gives you enough rope to hang yourself. Monitor your slow queries, respect the ESR rule, and keep your documents bounded. 
+
+If you do that, MongoDB won't kill your system—it will help it thrive.
