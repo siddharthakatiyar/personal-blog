@@ -53,6 +53,41 @@ export default function Home() {
           </div>
         </section>
       </ScrollFade>
+
+      <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always flex flex-col items-center justify-center text-center px-4">
+        <section className="container mx-auto max-w-4xl py-24">
+          <div className="relative group">
+            <div className="absolute -inset-1 bg-linear-to-r from-primary to-primary-foreground opacity-25 blur-3xl group-hover:opacity-50 transition duration-1000 group-hover:duration-200" />
+            <div className="relative bg-card/50 backdrop-blur-xl border border-border/50 rounded-3xl p-8 md:p-16 shadow-2xl">
+              <h2 className="text-3xl md:text-5xl font-bold tracking-tight mb-6">
+                Let's build something together.
+              </h2>
+              <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto leading-relaxed">
+                I'm open to freelance projects, consulting, and interesting collaborations. If you have a backend infrastructure challenge or a security project — let's talk.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button 
+                  render={<Link href="mailto:siddharthakatiyar25@gmail.com" />} 
+                  size="lg" 
+                  nativeButton={false}
+                  className="px-8 shadow-lg shadow-primary/20"
+                >
+                  Get in touch
+                </Button>
+                <Button 
+                  render={<Link href="https://x.com/siddharthakat25" target="_blank" />} 
+                  variant="outline" 
+                  size="lg" 
+                  nativeButton={false}
+                  className="px-8"
+                >
+                  DM on X
+                </Button>
+              </div>
+            </div>
+          </div>
+        </section>
+      </ScrollFade>
     </div>
   );
 }

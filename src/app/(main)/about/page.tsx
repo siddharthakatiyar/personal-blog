@@ -366,6 +366,40 @@ export default function AboutPage() {
           ))}
         </ul>
       </section>
+      <Separator className="my-16" />
+      
+      <section className="pb-12 text-center">
+        <div className="relative group max-w-2xl mx-auto">
+          <div className="absolute -inset-1 bg-linear-to-r from-primary/50 to-primary-foreground/50 opacity-10 blur-2xl group-hover:opacity-20 transition duration-1000 group-hover:duration-200" />
+          <div className="relative bg-muted/20 border border-border/50 rounded-2xl p-8 md:p-12">
+            <h2 className="text-2xl font-bold tracking-tight mb-4">Interested in working together?</h2>
+            <p className="text-sm text-muted-foreground mb-8 leading-relaxed">
+              I'm always looking for interesting backend challenges and security projects. 
+              Whether it's a freelance gig, a consulting opportunity, or just to say hi — 
+              I'd love to hear from you.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button 
+                render={<Link href="mailto:siddharthakatiyar25@gmail.com" />} 
+                size="default" 
+                nativeButton={false}
+                className="px-6"
+              >
+                Send an email
+              </Button>
+              <Button 
+                render={<Link href="https://x.com/siddharthakat25" target="_blank" />} 
+                variant="outline" 
+                size="default" 
+                nativeButton={false}
+                className="px-6"
+              >
+                DM on X
+              </Button>
+            </div>
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
