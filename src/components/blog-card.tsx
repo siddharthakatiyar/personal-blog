@@ -19,23 +19,27 @@ export function BlogCard({ title, description, pubDate, slug, tags }: BlogCardPr
 
   return (
     <Link href={`/blog/${slug}`} className="block h-full group">
-      <Card className="h-full flex flex-col transition-all hover:-translate-y-1 hover:shadow-md">
-        <CardHeader>
-          <div className="text-sm text-muted-foreground mb-2">{formattedDate}</div>
-          <CardTitle className="group-hover:text-primary transition-colors leading-tight">
+      <Card className="h-full flex flex-col border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
+        <CardHeader className="pb-3">
+          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">{formattedDate}</div>
+          <CardTitle className="text-lg md:text-xl group-hover:text-primary transition-colors leading-snug">
             {title}
           </CardTitle>
-          <CardDescription className="mt-2 line-clamp-3">
+          <CardDescription className="mt-2 line-clamp-3 text-sm leading-relaxed">
             {description}
           </CardDescription>
         </CardHeader>
         <CardContent className="flex-grow">
           {/* Content reserved for future use if needed */}
         </CardContent>
-        <CardFooter>
-          <div className="flex flex-wrap gap-2">
-            {tags.map((tag) => (
-              <Badge key={tag} variant="secondary" className="font-normal text-xs">
+        <CardFooter className="pt-0 pb-6">
+          <div className="flex flex-wrap gap-1.5">
+            {tags?.map((tag) => (
+              <Badge 
+                key={tag} 
+                variant="outline" 
+                className="font-normal text-[10px] uppercase tracking-wider border-border/60 text-muted-foreground group-hover:border-primary/30 group-hover:text-primary transition-colors"
+              >
                 {tag}
               </Badge>
             ))}
