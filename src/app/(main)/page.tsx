@@ -12,10 +12,10 @@ export default function Home() {
     <div data-scroll-snap>
       <section className="relative container mx-auto max-w-screen-2xl px-4 md:px-8 flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] text-center snap-start snap-always">
         <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
+          <h1 className="text-3xl md:text-6xl font-bold tracking-tight mb-6">
             Hi, I'm Siddhartha Katiyar.
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
+          <p className="text-lg md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
             I'm a software engineer focused on building secure, scalable systems and high-performance security infrastructure.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -39,7 +39,7 @@ export default function Home() {
               View all posts &rarr;
             </Link>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
             {latestPosts.map((post) => (
               <BlogCard
                 key={post.slug}

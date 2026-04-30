@@ -97,7 +97,7 @@ export default async function BlogPostPage({ params }: Props) {
               {post.meta.description}
             </p>
             
-            <div className="flex flex-wrap items-center justify-between gap-4 pt-6 border-t border-border/50">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 pt-6 border-t border-border/50">
               <div className="flex items-center space-x-3">
                 <Image
                   src="/profile.jpeg"
@@ -113,11 +113,16 @@ export default async function BlogPostPage({ params }: Props) {
               </div>
               
               <div className="flex flex-wrap gap-1.5">
-                {post.meta.tags.map((tag) => (
+                {post.meta.tags.slice(0, 5).map((tag) => (
                   <Badge key={tag} variant="secondary" className="font-medium text-[9px] uppercase tracking-widest px-1.5 py-0">
                     {tag}
                   </Badge>
                 ))}
+                {post.meta.tags.length > 5 && (
+                  <span className="text-[9px] text-muted-foreground/50 self-center uppercase tracking-widest">
+                    +{post.meta.tags.length - 5}
+                  </span>
+                )}
               </div>
             </div>
           </header>

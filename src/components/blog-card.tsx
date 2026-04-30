@@ -31,7 +31,7 @@ export function BlogCard({ title, description, pubDate, slug, tags }: BlogCardPr
         </CardHeader>
         <CardFooter className="pt-4 pb-6 flex-grow items-end">
           <div className="flex flex-wrap gap-1.5">
-            {tags?.map((tag) => (
+            {tags?.slice(0, 4).map((tag) => (
               <Badge 
                 key={tag} 
                 variant="outline" 
@@ -40,6 +40,11 @@ export function BlogCard({ title, description, pubDate, slug, tags }: BlogCardPr
                 {tag}
               </Badge>
             ))}
+            {tags?.length > 4 && (
+              <span className="text-[10px] text-muted-foreground/50 self-center">
+                +{tags.length - 4} more
+              </span>
+            )}
           </div>
         </CardFooter>
       </Card>
