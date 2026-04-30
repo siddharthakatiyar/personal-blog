@@ -129,20 +129,20 @@ export default function AboutPage() {
   return (
     <div className="container mx-auto max-w-4xl px-4 md:px-8 py-16 md:py-24">
       {/* Header / Hero */}
-      <div className="flex flex-col sm:flex-row items-start gap-8 mb-12">
+      <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12 text-center md:text-left">
         <Image
           src="/profile.jpeg"
           alt="Siddhartha Katiyar"
-          width={120}
-          height={120}
+          width={140}
+          height={140}
           className="rounded-full border-2 border-border object-cover shrink-0"
           priority
         />
-        <div className="flex-1">
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-3">
+        <div className="flex-1 w-full">
+          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-4">
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">Siddhartha Katiyar</h1>
-              <p className="text-muted-foreground mt-1">Building Jsmon · Software Engineer</p>
+              <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Siddhartha Katiyar</h1>
+              <p className="text-muted-foreground mt-1.5">Building Jsmon · Software Engineer</p>
             </div>
             <Button
               render={
@@ -154,30 +154,30 @@ export default function AboutPage() {
               }
               nativeButton={false}
               variant="outline"
-              className="w-fit gap-2"
+              className="w-full sm:w-fit gap-2"
             >
               <Download className="h-4 w-4" />
               Download Résumé
             </Button>
           </div>
 
-          <div className="flex items-center gap-2 text-muted-foreground text-sm mb-4">
+          <div className="flex items-center justify-center md:justify-start gap-2 text-muted-foreground text-sm mb-4">
             <MapPin className="h-4 w-4" />
             <span>India</span>
           </div>
 
-          <p className="text-muted-foreground leading-relaxed mb-4">
+          <p className="text-muted-foreground leading-relaxed mb-6">
             Software engineer specializing in production-grade security systems, backend infrastructure,
             and multi-language codebases. Currently at Jsmon, an early-stage attack surface management
             startup, where I design distributed systems and move fast on hard problems.
           </p>
 
-          <div className="flex flex-wrap gap-4 mt-6">
+          <div className="flex flex-wrap justify-center md:justify-start gap-5 mt-6">
             <Link
               href="https://github.com/siddharthakatiyar"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
+              className="flex items-center justify-center w-11 h-11 md:w-10 md:h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
               aria-label="GitHub"
             >
               <Icons.gitHub className="h-5 w-5" />
@@ -186,7 +186,7 @@ export default function AboutPage() {
               href="https://x.com/siddharthakat25"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
+              className="flex items-center justify-center w-11 h-11 md:w-10 md:h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
               aria-label="Twitter"
             >
               <Icons.twitter className="h-[18px] w-[18px]" />
@@ -195,14 +195,14 @@ export default function AboutPage() {
               href="https://www.linkedin.com/in/siddharthakatiyar/"
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
+              className="flex items-center justify-center w-11 h-11 md:w-10 md:h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
               aria-label="LinkedIn"
             >
               <Icons.linkedin className="h-5 w-5" />
             </Link>
             <Link
               href="mailto:siddharthakatiyar25@gmail.com"
-              className="flex items-center justify-center w-10 h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
+              className="flex items-center justify-center w-11 h-11 md:w-10 md:h-10 rounded-full border border-border bg-background hover:bg-muted transition-colors"
               aria-label="Email"
             >
               <Mail className="h-5 w-5" />
@@ -224,7 +224,7 @@ export default function AboutPage() {
           {experience.map((job) => (
             <Card key={job.company} className="group">
               <CardHeader className="pb-3">
-                <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-1">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-2">
                   <div>
                     <div className="flex items-center gap-2">
                       <CardTitle className="text-base font-semibold">{job.role}</CardTitle>
@@ -239,8 +239,8 @@ export default function AboutPage() {
                       <ExternalLink className="h-3 w-3" />
                     </Link>
                   </div>
-                  <div className="text-sm text-muted-foreground text-right shrink-0">
-                    <div>{job.period}</div>
+                  <div className="text-sm text-muted-foreground md:text-right shrink-0 mt-1 md:mt-0">
+                    <div className="font-medium md:font-normal">{job.period}</div>
                     <div>{job.location}</div>
                   </div>
                 </div>

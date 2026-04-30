@@ -41,6 +41,15 @@ export function Header() {
             ))}
           </nav>
         </div>
+
+        {/* Mobile branding */}
+        <div className="md:hidden flex-1 flex items-center">
+          <Link href="/" className="flex items-center space-x-2">
+            <span className="font-bold text-sm">
+              siddhartha.work
+            </span>
+          </Link>
+        </div>
         <Sheet>
           <SheetTrigger
             render={
@@ -74,7 +83,7 @@ export function Header() {
             </div>
           </SheetContent>
         </Sheet>
-        <div className="flex flex-1 items-center justify-between space-x-2 md:justify-end">
+        <div className="flex items-center justify-end space-x-2">
           <div className="w-full flex-1 md:w-auto md:flex-none">
             {/* Can add search here later */}
           </div>

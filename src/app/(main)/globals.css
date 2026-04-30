@@ -175,6 +175,15 @@
 .prose p {
   line-height: 1.75;
   margin-bottom: 1.5em;
+  word-wrap: break-word;
+}
+
+.prose img {
+  @apply rounded-xl border border-border/50 max-w-full h-auto;
+}
+
+.prose pre {
+  @apply max-w-full overflow-x-auto;
 }
 
 .prose hr {
