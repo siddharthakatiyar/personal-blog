@@ -1,6 +1,6 @@
 {
-  "commit": "26577b21039732c6d20bd6bcbe9a46e0aa54a7e8",
-  "generated": "2026-04-30T13:01:17.426Z",
+  "commit": "16528674fd4a3507d2bd26202ec38ef937abaf4f",
+  "generated": "2026-04-30T13:40:29.509Z",
   "metadata": [
     {
       "__outstatic": {
@@ -17,6 +17,33 @@
       "description": "We didn't migrate because things broke. We migrated because they would. Here's the full, unfiltered story — including how two AI models did a week of engineering work in two hours.",
       "publishedAt": "2026-04-29T00:00:00.000Z",
       "slug": "mongodb-postgres",
+      "status": "published",
+      "tags": [
+        "postgresql",
+        "mongodb",
+        "database",
+        "migration",
+        "backend",
+        "ai",
+        "jsmon"
+      ],
+      "title": "Why We Moved from MongoDB to PostgreSQL (And What We Learned the Hard Way)"
+    },
+    {
+      "__outstatic": {
+        "commit": "16528674fd4a3507d2bd26202ec38ef937abaf4f",
+        "hash": "3669532699",
+        "path": "outstatic/content/posts/mongodb-to-postgresql-migration.mdx"
+      },
+      "author": {
+        "name": "Siddhartha Katiyar",
+        "picture": "https://avatars.githubusercontent.com/u/68554997?v=4"
+      },
+      "collection": "posts",
+      "coverImage": "",
+      "description": "We didn't migrate because things broke. We migrated because they would. Here's the full, unfiltered story — including how two AI models did a week of engineering work in two hours.",
+      "publishedAt": "2026-04-29T00:00:00.000Z",
+      "slug": "mongodb-to-postgresql-migration",
       "status": "published",
       "tags": [
         "postgresql",
