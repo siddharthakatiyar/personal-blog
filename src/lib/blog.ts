@@ -10,6 +10,7 @@ export interface PostMeta {
   pubDate: string;
   tags: string[];
   status?: string;
+  jsonLd?: any;
 }
 
 export interface Post {
