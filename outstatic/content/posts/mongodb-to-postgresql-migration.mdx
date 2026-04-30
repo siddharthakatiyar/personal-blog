@@ -26,6 +26,15 @@ This is that story.
 
 ---
 
+### TL;DR
+- **The Scale**: Migrated 2M MongoDB documents into 130M PostgreSQL rows (normalization isn't free!).
+- **The Why**: Relational queries were taking 5+ minutes; data consistency was a growing nightmare.
+- **The Strategy**: Used a "JSONB bridge" for a fast cut-over and built a custom high-throughput Go writer.
+- **The Win**: Complex queries dropped from 5 minutes to 25 seconds; caught silent bugs via schema constraints.
+- **The Secret**: Used AI agents (Claude & Gemini) to compress 2 weeks of engineering execution into just 2 hours.
+
+---
+
 ## What We Were Building
 
 [Jsmon](https://jsmon.sh) is an attack surface management platform. Think of it as continuous surveillance of your external-facing infrastructure — subdomains, exposed secrets, vulnerabilities, DNS changes, JS file diffs — across thousands of assets, running 24/7.

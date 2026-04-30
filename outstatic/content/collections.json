@@ -6,7 +6,7 @@
     "children": [
       {
         "title": "Why We Moved from MongoDB to PostgreSQL (And What We Learned the Hard Way)",
-        "slug": "mongodb-pitfalls",
+        "slug": "mongodb-to-postgresql-migration",
         "publishedAt": "2026-04-29T00:00:00.000Z",
         "status": "published"
       }
