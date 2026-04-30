@@ -1,10 +1,19 @@
 ---
 title: "Why We Moved from MongoDB to PostgreSQL (And What We Learned the Hard Way)"
 publishedAt: "2026-04-29T00:00:00.000Z"
-status: "published"
+status: "draft"
 slug: "mongodb-pitfalls"
-author: "Siddhartha"
-tags: ["postgresql", "mongodb", "database", "migration", "backend", "ai", "jsmon"]
+author:
+  name: "Siddhartha Katiyar"
+  picture: "https://avatars.githubusercontent.com/u/68554997?v=4"
+tags:
+  - "postgresql"
+  - "mongodb"
+  - "database"
+  - "migration"
+  - "backend"
+  - "ai"
+  - "jsmon"
 description: "We didn't migrate because things broke. We migrated because they would. Here's the full, unfiltered story — including how two AI models did a week of engineering work in two hours."
 coverImage: ""
 ---
@@ -24,11 +33,12 @@ This is that story.
 The data model is not simple. We have **workspaces, users, findings, secrets, scan results, domain records, URL snapshots** — and these things are deeply relational. A finding belongs to a scan. A scan belongs to a workspace. A secret is tied to a URL which is tied to a domain which is tied to a scan run. You get the idea.
 
 At the time of migration, we had:
-- ~3,000 users
-- ~2 million documents in MongoDB
+
+- \~3,000 users
+- \~2 million documents in MongoDB
 - A Node + Go backend, with Redis for queuing
 
-After migration: **130 million rows in PostgreSQL.** 
+After migration: **130 million rows in PostgreSQL.**
 
 That's not a typo. 2M documents → 130M rows. Normalization is not free.
 
@@ -85,6 +95,7 @@ Here's the philosophy MongoDB sells you: **model your data around how you access
 This works perfectly when your access patterns are known, stable, and simple.
 
 Jsmon's access patterns are *none of those things.* Security data is inherently cross-cutting. You want to ask questions like:
+
 - "Which workspaces have domains that share this vulnerable JS library?"
 - "Which scans found secrets that haven't been remediated across all users?"
 
@@ -97,6 +108,7 @@ The "denormalize everything" philosophy made sense at document-level access. It 
 ## Why PostgreSQL? Why Not Just Fix Mongo?
 
 We considered it. There are things you can do to make MongoDB more bearable:
+
 - Better indexing
 - Tighter embedding strategy
 - Schema validation (yes, Mongo has it)
@@ -138,6 +150,7 @@ Everyone focuses on query rewrites. The schema design took far longer and was fa
 Getting the normalization right, deciding what to index (and critically, what *not* to index — indexes aren't free), and designing for the query patterns we knew were coming — this is where the real work was.
 
 Some index decisions were painful lessons:
+
 - We over-indexed early and saw write performance suffer
 - Some queries that seemed like they'd benefit from a composite index actually performed better with a partial index
 - JSONB columns need GIN indexes, not the default B-tree
@@ -157,6 +170,7 @@ Including debugging.
 The most dramatic improvement: a complex aggregation that was previously taking **5 minutes** now runs in **25 seconds.** That's not a typo either.
 
 Other improvements:
+
 - Several analytical queries went from **8 seconds → 500ms**, and that includes Redis caching on top of Postgres.
 - Join queries that were previously multi-round-trips in application code are now single SQL statements.
 
