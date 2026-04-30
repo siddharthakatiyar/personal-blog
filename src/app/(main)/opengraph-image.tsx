@@ -86,9 +86,10 @@ export default async function Image() {
               fontSize: '24px',
               fontWeight: 600,
               color: '#ffffff',
+              display: 'flex',
             }}
           >
-            siddhartha.work
+            siddhartha.<span style={{ fontStyle: 'italic', fontWeight: 500 }}>work</span>
           </div>
         </div>
       </div>

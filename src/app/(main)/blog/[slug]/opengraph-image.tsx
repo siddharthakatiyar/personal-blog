@@ -119,9 +119,10 @@ export default async function Image({ params }: { params: { slug: string } }) {
               fontSize: '24px',
               fontWeight: 700,
               color: '#3b82f6',
+              display: 'flex',
             }}
           >
-            siddhartha.work
+            siddhartha.<span style={{ fontStyle: 'italic', fontWeight: 500 }}>work</span>
           </div>
         </div>
       </div>

@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container px-4 md:px-8 mx-auto max-w-screen-2xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center md:items-start text-center md:text-left">
-            <h3 className="font-bold mb-4 text-lg">siddhartha.work</h3>
+            <h3 className="font-bold mb-4 text-lg">siddhartha.<span className="italic font-medium">work</span></h3>
             <p className="text-muted-foreground text-sm mb-6 leading-relaxed max-w-sm">
               Software engineer focused on building secure, scalable systems and high-performance security infrastructure.
             </p>
