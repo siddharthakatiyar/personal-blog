@@ -16,7 +16,7 @@ export default function Home() {
             Hi, I'm Siddhartha Katiyar.
           </h1>
           <p className="text-lg md:text-2xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-            I'm a software engineer focused on building secure, scalable systems and high-performance security infrastructure.
+            I'm a backend engineer focused on building high-scale systems
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button render={<Link href="/about" />} size="lg" nativeButton={false}>
