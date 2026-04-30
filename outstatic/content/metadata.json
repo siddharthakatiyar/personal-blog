@@ -1,0 +1,33 @@
+{
+  "commit": "",
+  "generated": "2026-04-30T10:03:19.815Z",
+  "metadata": [
+    {
+      "__outstatic": {
+        "commit": "",
+        "hash": "2411412934",
+        "path": "outstatic/content/posts/mongodb-pitfalls.mdx"
+      },
+      "author": {
+        "name": "Siddhartha Katiyar",
+        "picture": "https://avatars.githubusercontent.com/u/68554997?v=4"
+      },
+      "collection": "posts",
+      "coverImage": "",
+      "description": "We didn't migrate because things broke. We migrated because they would. Here's the full, unfiltered story — including how two AI models did a week of engineering work in two hours.",
+      "publishedAt": "2026-04-29T00:00:00.000Z",
+      "slug": "mongodb-pitfalls",
+      "status": "draft",
+      "tags": [
+        "postgresql",
+        "mongodb",
+        "database",
+        "migration",
+        "backend",
+        "ai",
+        "jsmon"
+      ],
+      "title": "Why We Moved from MongoDB to PostgreSQL (And What We Learned the Hard Way)"
+    }
+  ]
+}
