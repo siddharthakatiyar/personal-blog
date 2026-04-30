@@ -59,7 +59,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} siddhartha.work. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} Siddhartha Katiyar. All rights reserved.</p>
         </div>
       </div>
     </footer>
