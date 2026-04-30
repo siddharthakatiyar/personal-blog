@@ -20,7 +20,9 @@ export interface Post {
 
 export function getPostSlugs() {
   if (!fs.existsSync(contentDir)) return [];
-  return fs.readdirSync(contentDir).filter((file) => file.endsWith(".mdx") || file.endsWith(".md"));
+  return fs.readdirSync(contentDir).filter((file) => 
+    !file.startsWith(".") && (file.endsWith(".mdx") || file.endsWith(".md"))
+  );
 }
 
 export function getPostBySlug(slug: string): Post {

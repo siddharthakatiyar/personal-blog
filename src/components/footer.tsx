@@ -8,7 +8,7 @@ export function Footer() {
       <div className="container px-4 md:px-8 mx-auto max-w-screen-2xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div>
-            <h3 className="font-bold mb-4">Siddhartha Katiyar</h3>
+            <h3 className="font-bold mb-4">siddhartha.work</h3>
             <p className="text-muted-foreground text-sm mb-4 leading-relaxed">
               Software engineer focused on building secure, scalable systems and high-performance security infrastructure.
             </p>
@@ -59,7 +59,7 @@ export function Footer() {
           </div>
         </div>
         <div className="mt-12 text-center text-sm text-muted-foreground">
-          <p>© {new Date().getFullYear()} Siddhartha Katiyar. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} siddhartha.work. All rights reserved.</p>
         </div>
       </div>
     </footer>
