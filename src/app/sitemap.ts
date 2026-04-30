@@ -2,7 +2,7 @@ import { MetadataRoute } from "next";
 import { getAllPosts } from "@/lib/blog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://siddhartha.dev"; // Update this with actual URL
+  const baseUrl = process.env.NEXT_PUBLIC_APP_URL || "https://www.siddhartha.work";
   
   const posts = getAllPosts().map((post) => ({
     url: `${baseUrl}/blog/${post.slug}`,
