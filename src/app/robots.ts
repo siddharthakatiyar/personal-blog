@@ -6,6 +6,6 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://siddhartha.dev/sitemap.xml",
+    sitemap: `${process.env.NEXT_PUBLIC_APP_URL || "https://www.siddhartha.work"}/sitemap.xml`,
   };
 }
