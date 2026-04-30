@@ -1,8 +1,8 @@
 {
   "title": "Posts",
   "path": "outstatic/content/posts",
-  "fields": [
-    {
+  "fields": {
+    "title": {
       "title": "Title",
       "slug": "title",
       "fieldType": "String",
@@ -10,7 +10,7 @@
       "required": true,
       "description": ""
     },
-    {
+    "publishedAt": {
       "title": "Published at",
       "slug": "publishedAt",
       "fieldType": "Date",
@@ -18,7 +18,7 @@
       "required": true,
       "description": ""
     },
-    {
+    "status": {
       "title": "Status",
       "slug": "status",
       "fieldType": "String",
@@ -26,7 +26,7 @@
       "required": true,
       "description": ""
     },
-    {
+    "author": {
       "title": "Author",
       "slug": "author",
       "fieldType": "String",
@@ -34,7 +34,7 @@
       "required": false,
       "description": ""
     },
-    {
+    "description": {
       "title": "Description",
       "slug": "description",
       "fieldType": "Text",
@@ -42,7 +42,7 @@
       "required": false,
       "description": ""
     },
-    {
+    "tags": {
       "title": "Tags",
       "slug": "tags",
       "fieldType": "Tags",
@@ -51,5 +51,5 @@
       "description": "",
       "values": []
     }
-  ]
+  }
 }
