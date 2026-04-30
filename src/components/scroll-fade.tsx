@@ -2,7 +2,7 @@
 
 import { useEffect, useRef } from "react";
 
-export function ScrollFade({ children }: { children: React.ReactNode }) {
+export function ScrollFade({ children, className }: { children: React.ReactNode; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,7 +33,7 @@ export function ScrollFade({ children }: { children: React.ReactNode }) {
   }, []);
 
   return (
-    <div ref={ref} className="fade-in-section">
+    <div ref={ref} className={`fade-in-section ${className || ""}`}>
       {children}
     </div>
   );

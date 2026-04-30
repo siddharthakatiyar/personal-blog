@@ -1,0 +1,55 @@
+{
+  "title": "Posts",
+  "path": "outstatic/content/posts",
+  "fields": [
+    {
+      "title": "Title",
+      "slug": "title",
+      "fieldType": "String",
+      "dataType": "string",
+      "required": true,
+      "description": ""
+    },
+    {
+      "title": "Published at",
+      "slug": "publishedAt",
+      "fieldType": "Date",
+      "dataType": "date",
+      "required": true,
+      "description": ""
+    },
+    {
+      "title": "Status",
+      "slug": "status",
+      "fieldType": "String",
+      "dataType": "string",
+      "required": true,
+      "description": ""
+    },
+    {
+      "title": "Author",
+      "slug": "author",
+      "fieldType": "String",
+      "dataType": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "title": "Description",
+      "slug": "description",
+      "fieldType": "Text",
+      "dataType": "string",
+      "required": false,
+      "description": ""
+    },
+    {
+      "title": "Tags",
+      "slug": "tags",
+      "fieldType": "Tags",
+      "dataType": "array",
+      "required": false,
+      "description": "",
+      "values": []
+    }
+  ]
+}

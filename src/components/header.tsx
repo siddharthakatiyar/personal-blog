@@ -22,7 +22,7 @@ export function Header() {
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="font-bold sm:inline-block">
-              Siddhartha<span className="text-muted-foreground">.dev</span>
+              Siddhartha
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -42,20 +42,22 @@ export function Header() {
           </nav>
         </div>
         <Sheet>
-          <SheetTrigger asChild>
-            <Button
-              variant="ghost"
-              className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
-            >
-              <Menu className="h-5 w-5" />
-              <span className="sr-only">Toggle Menu</span>
-            </Button>
-          </SheetTrigger>
+          <SheetTrigger
+            render={
+              <Button
+                variant="ghost"
+                className="mr-2 px-0 text-base hover:bg-transparent focus-visible:bg-transparent focus-visible:ring-0 focus-visible:ring-offset-0 md:hidden"
+              >
+                <Menu className="h-5 w-5" />
+                <span className="sr-only">Toggle Menu</span>
+              </Button>
+            }
+          />
           <SheetContent side="left" className="pr-0">
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <SheetDescription className="sr-only">Main navigation links for the website.</SheetDescription>
             <Link href="/" className="flex items-center mb-6">
-              <span className="font-bold">Siddhartha.dev</span>
+              <span className="font-bold">Siddhartha</span>
             </Link>
             <div className="flex flex-col space-y-3">
               {routes.map((route) => (
