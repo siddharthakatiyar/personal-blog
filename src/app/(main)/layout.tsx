@@ -11,7 +11,7 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Siddhartha Katiyar | Developer Blog",
-  description: "Software engineer writing about dev things.",
+  description: "Technical deep-dives on backend infrastructure, database engineering, and security tooling. Sharing lessons from building high-performance systems at Jsmon.",
 };
 
 export default function RootLayout({
