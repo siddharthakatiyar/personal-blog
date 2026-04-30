@@ -87,8 +87,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
             alignItems: 'center',
             backgroundColor: '#111113',
             borderTop: '1px solid #1e293b',
-            padding: '40px 80px',
-            gap: '16px',
+            padding: '48px 64px 48px 80px',
             flexWrap: 'wrap',
           }}
         >
@@ -97,7 +96,7 @@ export default async function Image({ params }: { params: { slug: string } }) {
               key={tag}
               style={{
                 display: 'flex',
-                padding: '8px 20px',
+                padding: '10px 24px',
                 backgroundColor: '#1e293b',
                 borderRadius: '100px',
                 border: '1px solid #334155',
@@ -106,6 +105,9 @@ export default async function Image({ params }: { params: { slug: string } }) {
                 color: '#94a3b8',
                 textTransform: 'uppercase',
                 letterSpacing: '0.05em',
+                lineHeight: 1,
+                marginRight: '16px',
+                marginBottom: '16px',
               }}
             >
               {tag}
