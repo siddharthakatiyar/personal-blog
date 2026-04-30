@@ -168,6 +168,12 @@ export default async function BlogPostPage({ params }: Props) {
           </aside>
         </div>
       </article>
+      {post.meta.jsonLd && (
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(post.meta.jsonLd) }}
+        />
+      )}
     </>
   );
 }
