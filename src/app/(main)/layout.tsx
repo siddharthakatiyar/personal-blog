@@ -10,6 +10,7 @@ import { SpeedInsights } from "@vercel/speed-insights/next";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || "https://www.siddhartha.work"),
   title: "Siddhartha Katiyar | Developer Blog",
   description: "Technical deep-dives on backend infrastructure, database engineering, and security tooling. Sharing lessons from building high-performance systems at Jsmon.",
 };

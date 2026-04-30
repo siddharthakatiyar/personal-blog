@@ -22,7 +22,7 @@ export function Header() {
         <div className="mr-4 hidden md:flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <span className="font-bold sm:inline-block">
-              Siddhartha
+              siddhartha.work
             </span>
           </Link>
           <nav className="flex items-center space-x-6 text-sm font-medium">
@@ -57,7 +57,7 @@ export function Header() {
             <SheetTitle className="sr-only">Navigation Menu</SheetTitle>
             <SheetDescription className="sr-only">Main navigation links for the website.</SheetDescription>
             <Link href="/" className="flex items-center mb-6">
-              <span className="font-bold">Siddhartha</span>
+              <span className="font-bold">siddhartha.work</span>
             </Link>
             <div className="flex flex-col space-y-3">
               {routes.map((route) => (
