@@ -1,11 +1,11 @@
 {
-  "commit": "479ea7df5d46de934ad91f0cfb7cb361c4240cf6",
-  "generated": "2026-04-30T10:42:20.862Z",
+  "commit": "26577b21039732c6d20bd6bcbe9a46e0aa54a7e8",
+  "generated": "2026-04-30T13:01:17.426Z",
   "metadata": [
     {
       "__outstatic": {
-        "commit": "479ea7df5d46de934ad91f0cfb7cb361c4240cf6",
-        "hash": "1401966799",
+        "commit": "26577b21039732c6d20bd6bcbe9a46e0aa54a7e8",
+        "hash": "818108535",
         "path": "outstatic/content/posts/mongodb-postgres.mdx"
       },
       "author": {
@@ -17,7 +17,7 @@
       "description": "We didn't migrate because things broke. We migrated because they would. Here's the full, unfiltered story — including how two AI models did a week of engineering work in two hours.",
       "publishedAt": "2026-04-29T00:00:00.000Z",
       "slug": "mongodb-postgres",
-      "status": "draft",
+      "status": "published",
       "tags": [
         "postgresql",
         "mongodb",
