@@ -29,10 +29,7 @@ export function BlogCard({ title, description, pubDate, slug, tags }: BlogCardPr
             {description}
           </CardDescription>
         </CardHeader>
-        <CardContent className="flex-grow">
-          {/* Content reserved for future use if needed */}
-        </CardContent>
-        <CardFooter className="pt-0 pb-6">
+        <CardFooter className="pt-4 pb-6 flex-grow items-end">
           <div className="flex flex-wrap gap-1.5">
             {tags?.map((tag) => (
               <Badge 
