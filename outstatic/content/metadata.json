@@ -1,12 +1,12 @@
 {
-  "commit": "",
-  "generated": "2026-04-30T10:03:19.815Z",
+  "commit": "479ea7df5d46de934ad91f0cfb7cb361c4240cf6",
+  "generated": "2026-04-30T10:42:20.862Z",
   "metadata": [
     {
       "__outstatic": {
-        "commit": "",
-        "hash": "2411412934",
-        "path": "outstatic/content/posts/mongodb-pitfalls.mdx"
+        "commit": "479ea7df5d46de934ad91f0cfb7cb361c4240cf6",
+        "hash": "1401966799",
+        "path": "outstatic/content/posts/mongodb-postgres.mdx"
       },
       "author": {
         "name": "Siddhartha Katiyar",
@@ -16,7 +16,7 @@
       "coverImage": "",
       "description": "We didn't migrate because things broke. We migrated because they would. Here's the full, unfiltered story — including how two AI models did a week of engineering work in two hours.",
       "publishedAt": "2026-04-29T00:00:00.000Z",
-      "slug": "mongodb-pitfalls",
+      "slug": "mongodb-postgres",
       "status": "draft",
       "tags": [
         "postgresql",
