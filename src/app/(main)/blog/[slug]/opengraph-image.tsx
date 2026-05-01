@@ -53,29 +53,36 @@ export default async function Image({ params }: { params: { slug: string } }) {
             {formattedDate}
           </div>
           
-          <h1
+          <div
             style={{
-              fontSize: '72px',
-              fontWeight: 800,
-              lineHeight: 1.1,
-              margin: '0 0 32px 0',
-              letterSpacing: '-0.02em',
+              display: 'flex',
+              flexDirection: 'column',
+              gap: '32px',
             }}
           >
-            {post.meta.title}
-          </h1>
+            <div
+              style={{
+                fontSize: '60px',
+                fontWeight: 800,
+                lineHeight: 1.2,
+                color: '#f8fafc',
+                letterSpacing: '-0.02em',
+              }}
+            >
+              {post.meta.title}
+            </div>
 
-          <p
-            style={{
-              fontSize: '28px',
-              lineHeight: 1.5,
-              color: '#94a3b8',
-              maxWidth: '900px',
-              margin: 0,
-            }}
-          >
-            {post.meta.description}
-          </p>
+            <div
+              style={{
+                fontSize: '28px',
+                lineHeight: 1.5,
+                color: '#94a3b8',
+                maxWidth: '900px',
+              }}
+            >
+              {post.meta.description}
+            </div>
+          </div>
         </div>
 
         <div
