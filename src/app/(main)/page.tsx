@@ -31,15 +31,15 @@ export default function Home() {
         <ScrollIndicator />
       </section>
 
-      <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always">
-        <section className="container mx-auto max-w-screen-2xl px-4 md:px-8 pt-16 pb-24">
+      <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always relative">
+        <section className="container mx-auto max-w-screen-2xl px-4 md:px-8 pt-16 pb-24 h-full flex flex-col">
           <div className="flex justify-between items-baseline mb-10">
             <h2 className="text-3xl font-bold tracking-tight">Latest Writing</h2>
             <Link href="/blog" className="text-primary font-medium hover:underline">
               View all posts &rarr;
             </Link>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 flex-grow">
             {latestPosts.map((post) => (
               <BlogCard
                 key={post.slug}
@@ -52,6 +52,8 @@ export default function Home() {
             ))}
           </div>
         </section>
+
+        <ScrollIndicator />
       </ScrollFade>
 
       <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always flex flex-col items-center justify-center text-center px-4">
