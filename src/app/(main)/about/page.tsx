@@ -34,9 +34,9 @@ const experience = [
       "Designed and implemented a distributed caching layer using Redis, improving response times by 80%.",
       "Refactored monolithic backend services into event-driven microservices to handle 10k+ requests/second.",
       "Developed a high-throughput web artifact ingestion pipeline using AWS, ClickHouse, and TypeScript.",
-      "Built an Automated Attack Surface Management (ASM) system and 50+ Nuclei templates for security detection.",
+      "Built an Automated Attack Surface Management (ASM) system and a template engine for vulnerability detection.",
     ],
-    skills: ["PostgreSQL", "Redis", "TypeScript", "AWS", "ClickHouse", "Go", "Nuclei"],
+    skills: ["PostgreSQL", "Redis", "TypeScript", "AWS", "ClickHouse", "Go"],
   },
   {
     company: "Cisco",
@@ -98,8 +98,7 @@ const education = [
 const skills = {
   "Backend & Systems": ["Node.js", "Go", "Python", "Java (Spring Boot)", "TypeScript", "FastAPI", "C++"],
   "Databases": ["PostgreSQL", "MongoDB", "Redis", "ClickHouse", "MySQL"],
-  "Cloud & Infrastructure": ["AWS", "Docker", "Distributed Systems", "Linux"],
-  "Security": ["Nuclei", "Attack Surface Management", "Bug Bounty", "Recon Automation"],
+  "Cloud & Infrastructure": ["AWS", "GCP", "Docker", "Distributed Systems", "Linux"],
   "Frontend": ["React", "Next.js"],
 };
 
