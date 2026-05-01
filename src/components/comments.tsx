@@ -15,10 +15,10 @@ export function Comments() {
 
     const script = document.createElement("script");
     script.src = "https://giscus.app/client.js";
-    script.setAttribute("data-repo", "siddharthakatiyar/portfolio");
-    script.setAttribute("data-repo-id", "R_kgDOSP74KQ");
+    script.setAttribute("data-repo", "siddharthakatiyar/blog-comments");
+    script.setAttribute("data-repo-id", "R_kgDOSR16Gg");
     script.setAttribute("data-category", "Ideas");
-    script.setAttribute("data-category-id", "DIC_kwDOSP74Kc4C79_c");
+    script.setAttribute("data-category-id", "DIC_kwDOSR16Gs4C8Il-");
     script.setAttribute("data-mapping", "pathname");
     script.setAttribute("data-strict", "0");
     script.setAttribute("data-reactions-enabled", "1");
