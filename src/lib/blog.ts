@@ -54,7 +54,7 @@ export function getAllPosts(): Post[] {
   const slugs = getPostSlugs();
   const posts = slugs
     .map((slug) => getPostBySlug(slug))
-    .filter((post) => post.meta.status !== "draft") // Filter out drafts
+    .filter((post) => post.meta.status === "published") // Only show published posts
     // sort posts by date in descending order
     .sort((post1, post2) => (post1.meta.pubDate > post2.meta.pubDate ? -1 : 1));
   return posts;
