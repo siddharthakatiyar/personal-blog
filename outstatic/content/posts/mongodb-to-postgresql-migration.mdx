@@ -42,7 +42,7 @@ jsonLd:
   "keywords": "mongodb to postgresql migration, database migration, postgresql performance, nosql to sql"
 ---
 
-Let me say this upfront: **we didn't migrate because our system was collapsing. We migrated because it would.**
+Let me say this upfront: we didn't migrate because our system was collapsing. We migrated because it would.
 
 That's a different story than most migration posts you read. There was no outage, no 3 AM PagerDuty spiral, no moment where the database literally caught fire. It was quieter than that — and in some ways more unsettling. Just a slow realization that the architecture we had was debt that would eventually come due.
 
@@ -50,13 +50,19 @@ This is that story. I'm Siddhartha Katiyar, an SDE at [Jsmon](https://jsmon.sh),
 
 ---
 
-### TL;DR
+## TL;DR
 
-- Migrated 2M MongoDB documents into 130M PostgreSQL rows (normalization isn't free)
+<StatCards>
+  <StatCard label="Documents migrated" value="2M → 130M rows" sub="normalization isn't free" />
+  <StatCard label="Query time (before)" value="5 min" sub="complex aggregations" />
+  <StatCard label="Query time (after)" value="25 sec" sub="same queries, PostgreSQL" />
+  <StatCard label="Migration cost" value="USD 16.50 (INR 1,563)" sub="Gemini API credits" />
+</StatCards>
+
 - Relational queries were taking 5+ minutes; data consistency was becoming a real problem
 - Used a JSONB bridge for fast cut-over + built a custom Go writer for high-throughput inserts
-- Complex queries now run in 25 seconds instead of 5 minutes; schema constraints caught bugs that had been silently lurking for months
-- Used AI agents (Claude + Gemini) to compress what would've been ~2 weeks of execution into 2 hours — more on that at the end
+- Schema constraints caught bugs that had been silently lurking for months
+- Used AI agents (Claude + Gemini) to compress ~2 weeks of execution into 2 hours — more on that at the end
 
 ---
 
@@ -66,11 +72,7 @@ This is that story. I'm Siddhartha Katiyar, an SDE at [Jsmon](https://jsmon.sh),
 
 The data model is not simple. Workspaces, users, findings, secrets, scan results, domain records, URL snapshots — and these things are deeply relational. A finding belongs to a scan. A scan belongs to a workspace. A secret is tied to a URL which is tied to a domain which is tied to a scan run.
 
-At the time of migration:
-
-- ~3,000 users
-- ~2 million documents in MongoDB
-- A Node.js + Go backend, with Redis for queuing
+At the time of migration: ~3,000 users, ~2 million documents in MongoDB, a Node.js + Go backend with Redis for queuing.
 
 After migration: **130 million rows in PostgreSQL.** That's not a typo — 2M documents → 130M rows. Normalization isn't free.
 
@@ -80,9 +82,9 @@ After migration: **130 million rows in PostgreSQL.** That's not a typo — 2M do
 
 Honest answer: I don't fully know. I joined after the initial architectural decisions were made.
 
-But I've seen enough early-stage startups to reconstruct the reasoning. MongoDB is the "just ship it" database. Schema flexibility means you don't have to think hard upfront, documents map cleanly to JSON objects, and that maps cleanly to how Node.js devs think. You iterate fast, nest things, move on.
+Jsmon is the first startup I've worked at, so I can only speculate — but the reasoning isn't hard to reconstruct. MongoDB is the "just ship it" database. Schema flexibility means you don't have to think hard upfront, documents map cleanly to JSON objects, and that maps cleanly to how Node.js devs think. You iterate fast, nest things, move on.
 
-It's not a bad choice for day one — I want to be clear about that. The early team made a reasonable call. The problem is what MongoDB *implicitly encourages*, and what you don't notice until you're already knee-deep in it.
+It's not a bad choice for day one — I want to be clear about that. The early team made a reasonable call. The problem is what MongoDB implicitly encourages, and what you don't notice until you're already knee-deep in it.
 
 ---
 
@@ -92,9 +94,45 @@ Nobody came to me with a postmortem. There was no incident. What there was, inst
 
 ### Aggregations across collections were painful
 
-MongoDB is excellent when your data fits neatly inside a single document. Jsmon's data doesn't. A query like "show me all high-severity findings for this workspace, grouped by scan, with the associated user details" means you either embed everything (hello, duplication), do manual joins in application code across multiple queries, or write a [`$lookup` aggregation pipeline](https://www.mongodb.com/docs/manual/reference/operator/aggregation/lookup/) that looks like it was designed by someone who genuinely dislikes you.
+MongoDB is excellent when your data fits neatly inside a single document. Jsmon's data doesn't. A query like "show me all high-severity findings for this workspace, grouped by scan, with the associated user details" means you either embed everything (hello, duplication), do manual joins in application code across multiple queries, or write a `$lookup` aggregation pipeline that looks like it was designed by someone who genuinely dislikes you.
 
-We were doing all three at different points. The `$lookup` pipelines for our more complex queries were deeply unreadable. And when a pipeline takes 5 minutes to run — yes, five minutes — you stop trusting your own system.
+```js
+// This is what "a simple cross-collection query" looked like
+db.findings.aggregate([
+  { $match: { workspace_id: id, severity: "high" } },
+  {
+    $lookup: {
+      from: "scans",
+      localField: "scan_id",
+      foreignField: "_id",
+      as: "scan"
+    }
+  },
+  { $unwind: "$scan" },
+  {
+    $lookup: {
+      from: "users",
+      localField: "scan.user_id",
+      foreignField: "_id",
+      as: "user"
+    }
+  },
+  { $unwind: "$user" },
+  { $group: { _id: "$scan_id", findings: { $push: "$$ROOT" } } }
+])
+```
+
+```sql
+-- The same query in PostgreSQL
+SELECT s.id, json_agg(f.*) AS findings
+FROM findings f
+JOIN scans s ON f.scan_id = s.id
+JOIN users u ON s.user_id = u.id
+WHERE f.workspace_id = $1 AND f.severity = 'high'
+GROUP BY s.id
+```
+
+We were doing all three approaches at different points. The `$lookup` pipelines for our more complex queries were deeply unreadable. And when a pipeline takes 5 minutes to run — yes, five minutes — you stop trusting your own system.
 
 ### Data duplication was everywhere
 
@@ -102,11 +140,11 @@ Mongo nudges you toward denormalization, so we had the same data living in multi
 
 ### No real transactions
 
-This one's underrated. When you're managing security scan state — a scan starts, runs, writes findings, updates counts, marks completion — you want those operations to be atomic. [MongoDB's multi-document transactions](https://www.mongodb.com/docs/manual/core/transactions/) exist but feel bolted-on, with real performance overhead. We had logic that was "probably consistent" rather than "guaranteed consistent." That's fine until it isn't.
+This one's underrated. When you're managing security scan state — a scan starts, runs, writes findings, updates counts, marks completion — you want those operations to be atomic. MongoDB's multi-document transactions exist but feel bolted-on, with real performance overhead. We had logic that was "probably consistent" rather than "guaranteed consistent." That's fine until it isn't.
 
 ### Debugging felt like archaeology
 
-Querying MongoDB in Compass for simple things was fine. But when something went wrong in production and you needed to cross-reference findings with scan states with workspace configs, you were writing nested pipelines in a shell. There was no moment of clarity where you could just *look at the data* and understand what happened.
+Querying MongoDB in Compass for simple things was fine. But when something went wrong in production and you needed to cross-reference findings with scan states with workspace configs, you were writing nested pipelines in a shell. There was no moment of clarity where you could just look at the data and understand what happened.
 
 ---
 
@@ -131,12 +169,48 @@ But the fundamental issue wasn't performance tuning. It was the data model. You 
 
 We briefly considered DynamoDB too, and ruled it out fast. DynamoDB is excellent if your access patterns are rigid and you're operating at Amazon scale. We're not, and its query model would've made the analytical problem worse.
 
-[PostgreSQL](https://www.postgresql.org/docs/) won for four specific reasons:
-
-1. **Joins.** Actual, real, performant joins. This alone fixes 80% of our query problems.
-2. **Transactions with rollbacks.** Scan state can now be atomic — everything commits or nothing does.
-3. **Constraints.** Foreign keys, unique constraints, not-null guarantees. Data integrity enforced at the database layer, not scattered across application code.
-4. **JSONB.** This is underrated as a migration enabler. PostgreSQL's JSONB type allowed us to migrate MongoDB documents as raw binary JSON columns first, then normalize them progressively into proper relational tables. It gave us a much softer landing than a hard cut-over to a fully normalized schema from day one.
+<ComparisonTable>
+  <ComparisonHeader>
+    <th>Feature</th>
+    <th>MongoDB</th>
+    <th>PostgreSQL</th>
+  </ComparisonHeader>
+  <ComparisonRow>
+    <td>Cross-collection queries</td>
+    <td>❌ `$lookup` pipelines, slow and verbose</td>
+    <td>✅ Native JOINs, fast and readable</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Transactions</td>
+    <td>⚠️ Exists, but bolted-on and slow</td>
+    <td>✅ First-class, atomic by default</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Data integrity</td>
+    <td>❌ Application-level only</td>
+    <td>✅ FK constraints, not-null, unique</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Schema flexibility</td>
+    <td>✅ Schema-free, great for early iteration</td>
+    <td>⚠️ Rigid, requires upfront design</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>JSON support</td>
+    <td>✅ Native document model</td>
+    <td>✅ JSONB with GIN indexing</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Analytics / reporting</td>
+    <td>❌ Painful at scale</td>
+    <td>✅ SQL is purpose-built for this</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Simple CRUD verbosity</td>
+    <td>✅ Minimal boilerplate with ORMs</td>
+    <td>⚠️ More verbose with raw queries</td>
+  </ComparisonRow>
+</ComparisonTable>
 
 ---
 
@@ -146,7 +220,7 @@ This is the part most posts skip over or sanitize.
 
 ### The JSONB bridge strategy
 
-The JSONB bridge is a migration technique where MongoDB documents are first imported as raw JSONB columns in PostgreSQL before being progressively normalized into relational tables. Rather than requiring a perfect schema upfront, you get your data into Postgres quickly, then clean it up incrementally. This is what made our one-day migration possible — we weren't fully transforming 130M rows on day one, we were landing them safely first.
+The JSONB bridge is a migration technique where MongoDB documents are first imported as raw JSONB columns in PostgreSQL before being progressively normalized into relational tables. Rather than requiring a perfect schema upfront, you get your data into Postgres quickly, then clean it up incrementally. This is what made our migration feasible — we weren't fully transforming 130M rows on day one, we were landing them safely first.
 
 ### The strategy: big bang rewrite
 
@@ -160,11 +234,17 @@ We also built a **custom pgwriter** — a Go service that consumes from Redis qu
 
 Everyone focuses on query rewrites. The schema design took longer and was far more consequential. Getting the normalization right, deciding what to index (and critically, what *not* to index — indexes aren't free), designing for query patterns we knew were coming — this is where the real work was.
 
-Some index decisions were painful lessons: we over-indexed early and saw write performance suffer; some queries that seemed like they'd benefit from a composite index actually performed better with a partial index; JSONB columns need [GIN indexes](https://www.postgresql.org/docs/current/gin-intro.html), not the default B-tree.
+Some index decisions were painful lessons: we over-indexed early and saw write performance suffer; some queries that seemed like they'd benefit from a composite index actually performed better with a partial index; JSONB columns need GIN indexes, not the default B-tree.
 
-### The data migration took one day
+### The code migration took 2 hours
 
-Including debugging. 2 million Mongo documents → 130 million PostgreSQL rows in one day. Some of that speed came from the JSONB bridge — we could import documents without fully transforming them immediately. The rest came from aggressive parallel inserts and good schema prep.
+Rewriting all the MongoDB queries and moving to the queue-based PostgreSQL pipeline — that part took 2 hours. The actual code migration was fast because the schema work was already done.
+
+### The data migration took a full day
+
+This is where it got messy. 2 million Mongo documents → 130 million PostgreSQL rows sounds straightforward until you account for schema drift. These documents had accumulated over years of iteration — old documents looked nothing like the current schema. Fields renamed, structures nested differently, entire sub-documents that no longer existed in the new model. The JSONB bridge helped land the data quickly, but reconciling what old documents actually meant and mapping them correctly to the normalized schema took the bulk of that day. It wasn't a transfer problem. It was an archaeology problem.
+
+After the cut-over, we spent around a week progressively normalizing the JSONB data — but not all of it. The approach was pragmatic: anything that was part of a relational query or aggregation got normalized first, since that's where the performance gains actually live. The rest we left as JSONB, and that's fine. The rule we settled on: normalize when a query demands it, not before. There's still JSONB data sitting in Postgres today, and it'll stay that way until we have a reason to touch it.
 
 ---
 
@@ -181,6 +261,10 @@ The confidence improvement matters too. When a Postgres query returns data, I tr
 ---
 
 ## What Got Worse (Honesty Section)
+
+<Callout type="warning">
+  This section exists because most migration posts only tell you about the wins. These are real costs — not dealbreakers, but worth knowing before you commit.
+</Callout>
 
 **Simple CRUD got more verbose.** With MongoDB and a JS ORM, inserting a document is trivial. With raw `pg` queries — we chose not to use an ORM, intentionally — even a simple insert requires more boilerplate. Real cost.
 
@@ -206,17 +290,21 @@ The migration isn't the worst thing in the world — but two weeks of planning p
 
 ## The Part Nobody Puts in the Blog Post
 
+<Callout type="info">
+  This is the section I debated including. I'm including it because I think it's the most important thing I can say about the future of backend engineering.
+</Callout>
+
 **This migration was done with AI.**
 
 The planning happened over Cursor with Claude Opus for architecture — 16 minutes to produce the migration plan. The execution used Gemini 2.5 Pro, running up to 10 parallel agents, completing in 47 minutes.
 
-Total time: **2 hours from final prompt to finished migration.** Total cost: **₹1,563 in Gemini API credits.**
+Total time: **2 hours from final prompt to finished migration.** Total cost: **USD 16.50 (INR 1,563) in Gemini API credits.**
 
 Two weeks of planning and schema design — that was human. The execution that would've taken a developer one to two weeks? Two hours.
 
 I'm not writing this to flex. I'm writing it because I think we're at an inflection point most engineers haven't fully processed yet. The fundamentals still matter — I needed to understand normalization, indexing, query optimization, Redis architecture, and transaction semantics to write a prompt that produced correct output. The AI doesn't replace understanding. It replaces typing.
 
-But if you *have* the understanding, your execution velocity has changed by an order of magnitude. What used to be a "senior engineer, two weeks" project is now an "engineer with clear thinking, two hours" project. That compression ratio is worth sitting with.
+But if you have the understanding, your execution velocity has changed by an order of magnitude. What used to be a "senior engineer, two weeks" project is now an "engineer with clear thinking, two hours" project. That compression ratio is worth sitting with.
 
 ---
 
@@ -234,7 +322,7 @@ But if you *have* the understanding, your execution velocity has changed by an o
 ## Frequently Asked Questions
 
 **How long does a MongoDB to PostgreSQL migration take?**
-It depends heavily on data volume and schema complexity. For Jsmon, migrating 2 million MongoDB documents into 130 million normalized PostgreSQL rows took one day of actual execution — but two weeks of planning, schema design, and query rewriting preceded that. Using a JSONB bridge to stage the import significantly reduced execution time. Teams running smaller datasets with simpler schemas can reasonably expect a few hours to a few days for the full process.
+It depends heavily on data volume, schema complexity, and — critically — how much your schema has drifted over time. For Jsmon, the code migration (rewriting queries, moving to a queue-based PostgreSQL pipeline) took 2 hours. The data migration took a full day, most of which was spent reconciling old MongoDB documents that looked nothing like the current schema due to years of iteration. Two weeks of planning and schema design preceded all of that. Teams with cleaner, more consistent document histories will have a faster data migration; schema drift is the hidden variable most people don't account for.
 
 **When should you migrate from MongoDB to PostgreSQL?**
 The right time to migrate from MongoDB to PostgreSQL is when your data access patterns become primarily relational — meaning you're frequently joining across collections, struggling with data consistency across embedded documents, or finding that aggregation pipelines are becoming unreadable or slow. If your `$lookup` queries are taking minutes or your application code is doing manual joins across multiple queries, that's a strong signal. The longer you wait after those signs appear, the larger the migration debt becomes.
@@ -260,7 +348,7 @@ It led somewhere better.
 
 Was it worth it? Yes. Would I do it differently? Start with Postgres if the domain is clear. Start with Mongo if you're still learning what you're building.
 
-Either way — the migration is survivable. Especially with good fundamentals, a clear schema, and ₹1,563 in API credits.
+Either way — the migration is survivable. Especially with good fundamentals, a clear schema, and USD 16.50 (INR 1,563) in API credits.
 
 ---
 
