@@ -2,6 +2,8 @@ import type { MDXComponents } from "mdx/types";
 import Image, { ImageProps } from "next/image";
 
 import { Callout } from "@/components/callout";
+import { StatCard, StatCards } from "@/components/stat-card";
+import { ComparisonTable, ComparisonHeader, ComparisonRow } from "@/components/comparison-table";
 
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -26,6 +28,11 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
       </div>
     ),
     Callout,
+    StatCard,
+    StatCards,
+    ComparisonTable,
+    ComparisonHeader,
+    ComparisonRow,
     ...components,
   };
 }
