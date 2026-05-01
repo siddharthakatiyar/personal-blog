@@ -55,13 +55,11 @@ export default async function Image({ params }: { params: { slug: string } }) {
           
           <h1
             style={{
-              fontSize: '84px',
+              fontSize: '72px',
               fontWeight: 800,
               lineHeight: 1.1,
-              marginBottom: '32px',
+              margin: '0 0 32px 0',
               letterSpacing: '-0.02em',
-              display: 'flex',
-              flexWrap: 'wrap',
             }}
           >
             {post.meta.title}
@@ -69,12 +67,11 @@ export default async function Image({ params }: { params: { slug: string } }) {
 
           <p
             style={{
-              fontSize: '32px',
-              lineHeight: 1.4,
+              fontSize: '28px',
+              lineHeight: 1.5,
               color: '#94a3b8',
               maxWidth: '900px',
-              display: 'flex',
-              flexWrap: 'wrap',
+              margin: 0,
             }}
           >
             {post.meta.description}
