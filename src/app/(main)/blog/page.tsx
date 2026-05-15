@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export default function BlogPage() {
-  const posts = getAllPosts();
+  const posts = getAllPosts().filter(post => post.meta.status === "published");
   const tags = getAllTags();
 
   return (
