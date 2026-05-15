@@ -6,7 +6,7 @@ import { ScrollIndicator } from "@/components/scroll-indicator";
 import { getAllPosts } from "@/lib/blog";
 
 export default function Home() {
-  const latestPosts = getAllPosts().slice(0, 3);
+  const latestPosts = getAllPosts().filter(post => post.meta.status === "published").slice(0, 3);
 
   return (
     <div data-scroll-snap>
