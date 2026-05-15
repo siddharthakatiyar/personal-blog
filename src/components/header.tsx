@@ -9,6 +9,7 @@ import { Icons } from "@/components/icons";
 
 const routes = [
   { href: "/", label: "Home" },
+  { href: "/blog", label: "Blog" },
   { href: "/about", label: "About" },
 ];
 
