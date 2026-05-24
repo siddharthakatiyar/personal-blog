@@ -75,7 +75,7 @@ export default async function Image() {
               maxWidth: '800px',
             }}
           >
-            Software Engineer specializing in infrastructure and security. 
+            Building reliable systems for the AI era.
           </p>
           <div
             style={{
