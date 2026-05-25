@@ -52,7 +52,12 @@ This is that story. I'm Siddhartha Katiyar, an SDE at [Jsmon](https://jsmon.sh),
 
 ## TL;DR
 
-&lt;StatCards&gt; &lt;StatCard label="Documents migrated" value="2M → 130M rows" sub="normalization isn't free" /&gt; &lt;StatCard label="Query time (before)" value="5 min" sub="complex aggregations" /&gt; &lt;StatCard label="Query time (after)" value="25 sec" sub="same queries, PostgreSQL" /&gt; &lt;StatCard label="Migration cost" value="USD 16.50 (INR 1,563)" sub="Gemini API credits" /&gt; &lt;/StatCards&gt;
+<StatCards>
+  <StatCard label="Documents migrated" value="2M → 130M rows" sub="normalization isn't free" />
+  <StatCard label="Query time (before)" value="5 min" sub="complex aggregations" />
+  <StatCard label="Query time (after)" value="25 sec" sub="same queries, PostgreSQL" />
+  <StatCard label="Migration cost" value="USD 16.50 (INR 1,563)" sub="Gemini API credits" />
+</StatCards>
 
 - Relational queries were taking 5+ minutes; data consistency was becoming a real problem
 - Used a JSONB bridge for fast cut-over + built a custom Go writer for high-throughput inserts
@@ -164,7 +169,48 @@ But the fundamental issue wasn't performance tuning. It was the data model. You 
 
 We briefly considered DynamoDB too, and ruled it out fast. DynamoDB is excellent if your access patterns are rigid and you're operating at Amazon scale. We're not, and its query model would've made the analytical problem worse.
 
-&lt;ComparisonTable&gt; &lt;ComparisonHeader&gt; &lt;th&gt;Feature&lt;/th&gt; &lt;th&gt;MongoDB&lt;/th&gt; &lt;th&gt;PostgreSQL&lt;/th&gt; &lt;/ComparisonHeader&gt; &lt;ComparisonRow&gt; &lt;td&gt;Cross-collection queries&lt;/td&gt; &lt;td&gt;❌ `$lookup` pipelines, slow and verbose&lt;/td&gt; &lt;td&gt;✅ Native JOINs, fast and readable&lt;/td&gt; &lt;/ComparisonRow&gt; &lt;ComparisonRow&gt; &lt;td&gt;Transactions&lt;/td&gt; &lt;td&gt;⚠️ Exists, but bolted-on and slow&lt;/td&gt; &lt;td&gt;✅ First-class, atomic by default&lt;/td&gt; &lt;/ComparisonRow&gt; &lt;ComparisonRow&gt; &lt;td&gt;Data integrity&lt;/td&gt; &lt;td&gt;❌ Application-level only&lt;/td&gt; &lt;td&gt;✅ FK constraints, not-null, unique&lt;/td&gt; &lt;/ComparisonRow&gt; &lt;ComparisonRow&gt; &lt;td&gt;Schema flexibility&lt;/td&gt; &lt;td&gt;✅ Schema-free, great for early iteration&lt;/td&gt; &lt;td&gt;⚠️ Rigid, requires upfront design&lt;/td&gt; &lt;/ComparisonRow&gt; &lt;ComparisonRow&gt; &lt;td&gt;JSON support&lt;/td&gt; &lt;td&gt;✅ Native document model&lt;/td&gt; &lt;td&gt;✅ JSONB with GIN indexing&lt;/td&gt; &lt;/ComparisonRow&gt; &lt;ComparisonRow&gt; &lt;td&gt;Analytics / reporting&lt;/td&gt; &lt;td&gt;❌ Painful at scale&lt;/td&gt; &lt;td&gt;✅ SQL is purpose-built for this&lt;/td&gt; &lt;/ComparisonRow&gt; &lt;ComparisonRow&gt; &lt;td&gt;Simple CRUD verbosity&lt;/td&gt; &lt;td&gt;✅ Minimal boilerplate with ORMs&lt;/td&gt; &lt;td&gt;⚠️ More verbose with raw queries&lt;/td&gt; &lt;/ComparisonRow&gt; &lt;/ComparisonTable&gt;
+<ComparisonTable>
+  <ComparisonHeader>
+    <th>Feature</th>
+    <th>MongoDB</th>
+    <th>PostgreSQL</th>
+  </ComparisonHeader>
+  <ComparisonRow>
+    <td>Cross-collection queries</td>
+    <td>❌ `$lookup` pipelines, slow and verbose</td>
+    <td>✅ Native JOINs, fast and readable</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Transactions</td>
+    <td>⚠️ Exists, but bolted-on and slow</td>
+    <td>✅ First-class, atomic by default</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Data integrity</td>
+    <td>❌ Application-level only</td>
+    <td>✅ FK constraints, not-null, unique</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Schema flexibility</td>
+    <td>✅ Schema-free, great for early iteration</td>
+    <td>⚠️ Rigid, requires upfront design</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>JSON support</td>
+    <td>✅ Native document model</td>
+    <td>✅ JSONB with GIN indexing</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Analytics / reporting</td>
+    <td>❌ Painful at scale</td>
+    <td>✅ SQL is purpose-built for this</td>
+  </ComparisonRow>
+  <ComparisonRow>
+    <td>Simple CRUD verbosity</td>
+    <td>✅ Minimal boilerplate with ORMs</td>
+    <td>⚠️ More verbose with raw queries</td>
+  </ComparisonRow>
+</ComparisonTable>
 
 ---
 
@@ -216,7 +262,9 @@ The confidence improvement matters too. When a Postgres query returns data, I tr
 
 ## What Got Worse (Honesty Section)
 
-&lt;Callout type="warning"&gt; This section exists because most migration posts only tell you about the wins. These are real costs — not dealbreakers, but worth knowing before you commit. &lt;/Callout&gt;
+<Callout type="warning">
+  This section exists because most migration posts only tell you about the wins. These are real costs — not dealbreakers, but worth knowing before you commit.
+</Callout>
 
 **Simple CRUD got more verbose.** With MongoDB and a JS ORM, inserting a document is trivial. With raw `pg` queries — we chose not to use an ORM, intentionally — even a simple insert requires more boilerplate. Real cost.
 
@@ -242,7 +290,9 @@ The migration isn't the worst thing in the world — but two weeks of planning p
 
 ## The Part Nobody Puts in the Blog Post
 
-&lt;Callout type="info"&gt; This is the section I debated including. I'm including it because I think it's the most important thing I can say about the future of backend engineering. &lt;/Callout&gt;
+<Callout type="info">
+  This is the section I debated including. I'm including it because I think it's the most important thing I can say about the future of backend engineering.
+</Callout>
 
 **This migration was done with AI.**
 
