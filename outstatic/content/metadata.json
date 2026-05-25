@@ -1,10 +1,10 @@
 {
-  "commit": "0f7a7d3af4771dfa457ec460fd28a97344eae027",
-  "generated": "2026-05-01T16:16:14.944Z",
+  "commit": "b5cf74a6f6bb2735287e650080bacdf19a8e0b61",
+  "generated": "2026-05-25T04:44:02.658Z",
   "metadata": [
     {
       "__outstatic": {
-        "commit": "0f7a7d3af4771dfa457ec460fd28a97344eae027",
+        "commit": "b5cf74a6f6bb2735287e650080bacdf19a8e0b61",
         "hash": "3076909285",
         "path": "outstatic/content/posts/mongodb-to-postgresql-migration.mdx"
       },
