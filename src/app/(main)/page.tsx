@@ -47,14 +47,14 @@ export default function Home() {
             Building reliable systems for the AI era.
           </h1>
           <p className="text-base md:text-xl text-muted-foreground mb-10 max-w-4xl mx-auto font-medium">
-            SDE at Jsmon &middot; Codeforces Expert &middot; Writing about systems, databases, and AI engineering
+            SDE at Jsmon &middot; Competitive Programmer &middot; Writing about systems, databases, and AI engineering
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button render={<Link href="/about" />} size="lg" nativeButton={false}>
               More about me
             </Button>
             <Button render={<Link href="/blog" />} variant="outline" size="lg" nativeButton={false}>
-              Read my writing
+              My Blog
             </Button>
           </div>
         </div>
@@ -66,7 +66,7 @@ export default function Home() {
       <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always relative">
         <section className="container mx-auto max-w-screen-2xl px-4 md:px-8 pt-16 h-full flex flex-col justify-center">
           <div className="flex justify-between items-baseline mb-10">
-            <h2 className="text-3xl font-bold tracking-tight">Featured Writing</h2>
+            <h2 className="text-3xl font-bold tracking-tight">Featured Blogs</h2>
             <Link href="/blog" className="text-primary font-medium hover:underline">
               View all posts &rarr;
             </Link>
@@ -94,7 +94,7 @@ export default function Home() {
           
           {/* Featured Work */}
           <section>
-            <h2 className="text-3xl font-bold tracking-tight mb-10">Latest Projects</h2>
+            <h2 className="text-3xl font-bold tracking-tight mb-10">Featured Projects</h2>
             <div className="grid grid-cols-1 gap-6">
               <a 
                 href="https://throttlex.siddhartha.work" 
