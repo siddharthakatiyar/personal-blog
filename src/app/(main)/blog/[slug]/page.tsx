@@ -29,9 +29,34 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
   try {
     const post = getPostBySlug(slug);
+    const postUrl = `https://www.siddhartha.work/blog/${slug}`;
+    const ogImageUrl = `https://www.siddhartha.work/blog/${slug}/opengraph-image`;
+    
     return {
-      title: `${post.meta.title} | Siddhartha Katiyar`,
+      title: post.meta.title,
       description: post.meta.description,
+      openGraph: {
+        title: post.meta.title,
+        description: post.meta.description,
+        url: postUrl,
+        type: "article",
+        publishedTime: post.meta.pubDate,
+        authors: ["Siddhartha Katiyar"],
+        images: [
+          {
+            url: ogImageUrl,
+            width: 1200,
+            height: 630,
+            alt: post.meta.title,
+          },
+        ],
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: post.meta.title,
+        description: post.meta.description,
+        images: [ogImageUrl],
+      },
     };
   } catch (e) {
     return {
@@ -69,8 +94,34 @@ export default async function BlogPostPage({ params }: Props) {
     },
   };
 
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": post.meta.title,
+    "description": post.meta.description,
+    "datePublished": post.meta.pubDate,
+    "dateModified": post.meta.pubDate,
+    "author": {
+      "@type": "Person",
+      "name": "Siddhartha Katiyar",
+      "url": "https://www.siddhartha.work/about"
+    },
+    "publisher": {
+      "@type": "Person",
+      "name": "Siddhartha Katiyar"
+    },
+    "mainEntityOfPage": {
+      "@type": "WebPage",
+      "@id": `https://www.siddhartha.work/blog/${slug}`
+    }
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(articleJsonLd) }}
+      />
       <ReadingProgress />
       <article className="container mx-auto px-4 py-10 md:py-16">
         <div className="max-w-[680px] mx-auto mb-12">

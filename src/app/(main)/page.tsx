@@ -9,8 +9,37 @@ import { ArrowUpRight } from "lucide-react";
 export default function Home() {
   const latestPosts = getAllPosts().filter(post => post.meta.status === "published").slice(0, 3);
 
+  const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Siddhartha Katiyar",
+    "url": "https://www.siddhartha.work",
+    "jobTitle": "Systems Developer / Software Engineer",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Jsmon"
+    },
+    "sameAs": [
+      "https://github.com/siddharthakatiyar",
+      "https://x.com/siddharthakat25",
+      "https://www.linkedin.com/in/siddharthakatiyar/"
+    ],
+    "knowsAbout": [
+      "Distributed Systems",
+      "Database Systems",
+      "Go Programming Language",
+      "API Rate Limiting",
+      "Software Architecture",
+      "High-Performance Systems"
+    ]
+  };
+
   return (
     <div data-scroll-snap>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
       {/* Hero */}
       <section className="relative container mx-auto max-w-screen-2xl px-4 md:px-8 flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] text-center snap-start snap-always">
         <div className="max-w-4xl">
