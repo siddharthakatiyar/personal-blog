@@ -89,8 +89,8 @@ export default function Home() {
       </ScrollFade>
 
       {/* Combined Section: Work, Exploring, Principles, Mini-About */}
-      <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always relative">
-        <div className="container mx-auto max-w-screen-2xl px-4 md:px-8 py-24 space-y-32">
+      <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always relative flex flex-col">
+        <div className="container mx-auto max-w-screen-2xl px-4 md:px-8 pt-16 pb-28 flex-grow flex flex-col justify-between gap-12">
           
           {/* Featured Work */}
           <section>
