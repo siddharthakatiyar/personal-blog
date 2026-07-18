@@ -13,7 +13,8 @@ import {
   Briefcase,
   GraduationCap,
   Award,
-  Zap
+  Zap,
+  FolderGit2
 } from "lucide-react";
 
 export const metadata: Metadata = {
@@ -38,22 +39,24 @@ const experience = [
     period: "Nov 2024 – Present",
     url: "https://jsmon.sh",
     highlights: [
-      "Led a 110M+ row database migration from MongoDB to PostgreSQL for a high-traffic security platform.",
-      "Refactored monolithic backend services into event-driven microservices to handle 10k+ requests/second.",
-      "Built an Automated Attack Surface Management (ASM) system and a template engine for vulnerability detection.",
+      "Designed a distributed event-driven microservices platform using Redis queues, enabling independently scalable asynchronous backend workflows.",
+      "Developed an Aggregator service for distributed workflow orchestration, retries, and failure recovery across asynchronous backend services.",
+      "Led the design and implementation of a centralized PostgreSQL Writer for asynchronous persistence, batched SQL execution, and Redis cache invalidation, sustaining production workloads exceeding 2,000 queued jobs/sec.",
+      "Architected a normalized PostgreSQL schema and led the migration from MongoDB to PostgreSQL, supporting 500M+ records while reducing worst-case query latency from 10 minutes to 25 seconds through schema redesign and SQL optimization.",
+      "Built a distributed ingestion pipeline using AWS EC2 workers to collect Common Crawl and Wayback Machine data, storing append-heavy datasets in ClickHouse for security analytics.",
     ],
-    skills: ["PostgreSQL", "Redis", "TypeScript", "AWS", "ClickHouse", "Go"],
+    skills: ["Go", "PostgreSQL", "Redis", "ClickHouse", "AWS", "Microservices"],
   },
   {
-    company: "Cisco",
-    role: "Technical Intern I",
+    company: "Cisco Systems",
+    role: "Technical Intern",
     period: "Jan 2025 – Jun 2025",
     url: "https://cisco.com",
     highlights: [
-      "Built a zero-installation SSH CLI tool that reduced network analysis time in distributed environments by 98%.",
-      "Implemented structured Python parsers for programmable interfaces across multiple network platforms.",
+      "Built a CLI tool mapping legacy TDL configurations to YANG models, reducing Cisco IOS-XE migration lookup time from hours to 30 seconds.",
+      "Built a FastAPI dashboard visualizing TDL-to-YANG migration progress and test coverage.",
     ],
-    skills: ["Python", "React", "SSH", "YANG"],
+    skills: ["Python", "FastAPI", "YANG", "CLI"],
   },
   {
     company: "Fidelity International",
@@ -78,21 +81,47 @@ const experience = [
   },
 ];
 
+const projects = [
+  {
+    title: "ContextOS — AI Memory Layer",
+    url: "https://github.com/siddharthakatiyar",
+    highlights: [
+      "Built an AI memory layer implementing Model Context Protocol (MCP) for persistent, low-latency context retrieval across repositories.",
+      "Architected a hybrid semantic retrieval engine combining SQLite FTS5 (BM25), identifier-aware search, graph expansion, and intent-aware ranking for low-latency retrieval across large codebases.",
+    ],
+    skills: ["SQLite FTS5", "MCP", "Search Ranking", "Graphs"],
+  },
+  {
+    title: "ThrottleX — Distributed API Scheduling Platform",
+    url: "https://github.com/siddharthakatiyar",
+    highlights: [
+      "Designed a distributed scheduler maximizing throughput while enforcing third-party API rate limits.",
+      "Architected a Redis-backed scheduler combining time-weighted priority queues, Deficit Round Robin (DRR), tenant isolation, and atomic Lua-based dequeuing to ensure fair, fault-tolerant request scheduling.",
+    ],
+    skills: ["Redis", "Lua", "Scheduling", "DRR"],
+  },
+];
+
 const awards = [
   {
     title: "Codeforces Expert",
-    description: "Peak Rating: 1735 (Top 0.8% in India)",
+    description: "Max Rating: 1735 — Best Global Rank: 381 / 38,000+",
     link: "https://codeforces.com/profile/sidXIX",
   },
   {
     title: "CodeChef 5-Star",
-    description: "Peak Rating: 2068 (Top 0.2% globally)",
+    description: "Max Rating: 2068",
     link: "https://www.codechef.com/users/siddharthakat",
   },
   {
     title: "LeetCode Knight",
     description: "Peak Rating: 1895 (Top 5% globally)",
     link: "https://leetcode.com/u/siddharthakatiyar25/",
+  },
+  {
+    title: "NTSE Scholar",
+    description: "Awarded the National Talent Search Scholarship by NCERT (2019)",
+    link: "",
   },
 ];
 
@@ -223,6 +252,62 @@ export default function AboutPage() {
               
               <div className="flex flex-wrap gap-2">
                 {job.skills.map((s) => (
+                  <Badge key={s} variant="secondary" className="text-xs font-normal bg-muted/50 text-muted-foreground">
+                    {s}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <Separator className="my-12" />
+
+      {/* Projects */}
+      <section className="mb-12">
+        <div className="flex items-center gap-2 mb-8">
+          <FolderGit2 className="h-5 w-5 text-muted-foreground" />
+          <h2 className="text-xl font-bold tracking-tight">Selected Projects</h2>
+        </div>
+
+        <div className="space-y-10">
+          {projects.map((project) => (
+            <div key={project.title} className="relative pl-4 md:pl-0">
+              <div className="hidden md:block absolute left-[-21px] top-2 h-2 w-2 rounded-full bg-border" />
+              <div className="hidden md:block absolute left-[-18px] top-4 bottom-[-32px] w-px bg-border/50" />
+              
+              <div className="flex flex-col md:flex-row md:items-baseline md:justify-between gap-1 mb-3">
+                <div className="flex items-center gap-2 flex-wrap">
+                  <h3 className="text-base font-semibold text-foreground">{project.title.split(' — ')[0]}</h3>
+                  <span className="text-muted-foreground hidden sm:inline">—</span>
+                  <span className="text-foreground/80 font-medium inline-flex items-center gap-1">
+                    {project.title.split(' — ')[1]}
+                  </span>
+                </div>
+                {project.url && (
+                  <Link
+                    href={project.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-muted-foreground hover:text-primary transition-colors text-sm shrink-0 flex items-center gap-1"
+                  >
+                    GitHub <ExternalLink className="h-3 w-3" />
+                  </Link>
+                )}
+              </div>
+              
+              <ul className="space-y-2 mb-4">
+                {project.highlights.map((point, i) => (
+                  <li key={i} className="text-sm text-muted-foreground flex gap-3 items-start">
+                    <span className="text-muted-foreground/50 mt-0.5">▹</span>
+                    <span className="leading-relaxed">{point}</span>
+                  </li>
+                ))}
+              </ul>
+              
+              <div className="flex flex-wrap gap-2">
+                {project.skills.map((s) => (
                   <Badge key={s} variant="secondary" className="text-xs font-normal bg-muted/50 text-muted-foreground">
                     {s}
                   </Badge>
