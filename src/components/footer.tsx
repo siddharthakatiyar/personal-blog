@@ -4,7 +4,7 @@ import { Icons } from "@/components/icons";
 
 export function Footer() {
   return (
-    <footer className="border-t py-12 bg-muted/20 snap-start">
+    <footer className="border-t py-12 bg-background relative z-10 snap-start">
       <div className="container px-4 md:px-8 mx-auto max-w-screen-2xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           <div className="flex flex-col items-center md:items-start text-center md:text-left">

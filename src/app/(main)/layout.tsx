@@ -4,6 +4,7 @@ import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import { Header } from "@/components/header";
 import { Footer } from "@/components/footer";
+import { BackgroundParticles } from "@/components/background-particles";
 import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
@@ -59,8 +60,9 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className="relative flex min-h-screen flex-col">
-            <Header />
+          <BackgroundParticles />
+          <div className="flex min-h-screen flex-col">
+             <Header />
             <main className="flex-1">{children}</main>
             <Footer />
           </div>

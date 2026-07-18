@@ -93,7 +93,7 @@ const projects = [
   },
   {
     title: "ThrottleX — Distributed API Scheduling Platform",
-    url: "https://github.com/siddharthakatiyar",
+    url: "https://github.com/siddharthakatiyar/throttleX",
     highlights: [
       "Designed a distributed scheduler maximizing throughput while enforcing third-party API rate limits.",
       "Architected a Redis-backed scheduler combining time-weighted priority queues, Deficit Round Robin (DRR), tenant isolation, and atomic Lua-based dequeuing to ensure fair, fault-tolerant request scheduling.",
@@ -127,8 +127,9 @@ const awards = [
 
 export default function AboutPage() {
   return (
-    <div className="container mx-auto max-w-3xl px-4 md:px-8 py-16 md:py-24">
-      {/* Header / Hero */}
+    <div className="container mx-auto max-w-5xl px-4 md:px-8 py-16 md:py-24">
+      <div className="glass-panel rounded-3xl p-6 md:p-10">
+        {/* Header / Hero */}
       <div className="flex flex-col md:flex-row items-center md:items-start gap-8 mb-12 text-center md:text-left">
         <Image
           src="/profile.jpeg"
@@ -361,6 +362,8 @@ export default function AboutPage() {
             ))}
           </ul>
         </section>
+      </div>
+
       </div>
 
       <Separator className="my-16" />

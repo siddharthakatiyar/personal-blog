@@ -124,7 +124,8 @@ export default async function BlogPostPage({ params }: Props) {
       />
       <ReadingProgress />
       <article className="container mx-auto px-4 py-10 md:py-16">
-        <div className="max-w-[680px] mx-auto mb-12">
+        <div className="glass-panel rounded-3xl p-6 md:p-10 max-w-[1200px] mx-auto">
+          <div className="max-w-[850px] mx-auto mb-12">
           <Link 
             href="/blog" 
             className="text-xs text-muted-foreground hover:text-primary mb-6 inline-flex items-center gap-2 group transition-colors"
@@ -179,8 +180,8 @@ export default async function BlogPostPage({ params }: Props) {
           </header>
         </div>
 
-        <div className="max-w-screen-lg mx-auto relative flex flex-col lg:flex-row lg:items-start lg:justify-center gap-12">
-          <main className="w-full lg:w-auto max-w-[680px]">
+        <div className="max-w-screen-xl mx-auto relative flex flex-col lg:flex-row lg:items-start lg:justify-center gap-12">
+          <main className="w-full lg:w-auto max-w-[850px]">
             <div className="prose prose-neutral dark:prose-invert max-w-none prose-base md:prose-lg">
               <MDXRemote 
                 source={post.content} 
@@ -217,11 +218,12 @@ export default async function BlogPostPage({ params }: Props) {
             </div>
           </main>
 
-          <aside className="hidden lg:block lg:absolute lg:left-[calc(50%+340px+2rem)] w-[240px] shrink-0">
+          <aside className="hidden lg:block lg:absolute lg:left-[calc(50%+425px+2rem)] w-[240px] shrink-0">
             <div className="sticky top-24 space-y-8">
               <TableOfContents />
             </div>
           </aside>
+        </div>
         </div>
       </article>
       {post.meta.jsonLd && (
