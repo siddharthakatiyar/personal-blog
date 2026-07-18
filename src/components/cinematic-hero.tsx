@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Terminal } from "./terminal/terminal";
 import { ScrollIndicator } from "./scroll-indicator";
 import { Button } from "./ui/button";
@@ -9,6 +9,20 @@ import { motion, AnimatePresence } from "framer-motion";
 
 export function CinematicHero() {
   const [isBooted, setIsBooted] = useState(false);
+
+  // Lock scroll on body during boot sequence
+  useEffect(() => {
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, []);
+
+  useEffect(() => {
+    if (isBooted) {
+      document.body.style.overflow = "";
+    }
+  }, [isBooted]);
 
   return (
     <section className="relative container mx-auto max-w-screen-2xl px-4 md:px-8 flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] snap-start snap-always py-20 lg:py-0 overflow-hidden">
@@ -20,7 +34,7 @@ export function CinematicHero() {
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 1.5, ease: "easeInOut" }}
-            className="fixed inset-0 z-[100] bg-background pointer-events-none"
+            className="fixed inset-0 z-[100] bg-background"
           />
         )}
       </AnimatePresence>
