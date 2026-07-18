@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { BlogCard } from "@/components/blog-card";
 import { ScrollFade } from "@/components/scroll-fade";
 import { ScrollIndicator } from "@/components/scroll-indicator";
+import { CinematicHero } from "@/components/cinematic-hero";
 import { getAllPosts } from "@/lib/blog";
 import { ArrowUpRight, Star, GitFork, Download } from "lucide-react";
 
@@ -70,26 +71,7 @@ export default async function Home() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       {/* Hero */}
-      <section className="relative container mx-auto max-w-screen-2xl px-4 md:px-8 flex flex-col items-center justify-center min-h-[calc(100vh-3.5rem)] text-center snap-start snap-always">
-        <div className="max-w-4xl">
-          <h1 className="text-4xl md:text-6xl font-bold tracking-tight mb-6">
-            Building reliable systems for the AI era.
-          </h1>
-          <p className="text-base md:text-xl text-muted-foreground mb-10 max-w-4xl mx-auto font-medium">
-            SDE at Jsmon &middot; Competitive Programmer &middot; Writing about systems, databases, and AI engineering
-          </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Button render={<Link href="/about" />} size="lg" nativeButton={false}>
-              More about me
-            </Button>
-            <Button render={<Link href="/blog" />} variant="outline" size="lg" nativeButton={false}>
-              My Blog
-            </Button>
-          </div>
-        </div>
-        
-        <ScrollIndicator />
-      </section>
+      <CinematicHero />
 
       {/* Combined Section: Work, Exploring, Principles, Mini-About */}
       <ScrollFade className="min-h-[calc(100vh-3.5rem)] snap-start snap-always relative flex flex-col">
@@ -156,7 +138,7 @@ export default async function Home() {
 
               {/* ThrottleX */}
               <a 
-                href="https://throttlex.siddhartha.work" 
+                href="https://github.com/siddharthakatiyar/throttleX" 
                 target="_blank" 
                 rel="noopener noreferrer"
                 className="block p-8 border border-border/50 rounded-2xl bg-card/50 hover:bg-card hover:border-border transition-all group cursor-pointer"
