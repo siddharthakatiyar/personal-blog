@@ -2,6 +2,8 @@
 
 Welcome to my personal portfolio and blog! This is a modern, interactive web application built to showcase my projects, professional experience, and technical writing. It features a unique, fully functional terminal interface that simulates a Unix-like filesystem.
 
+[![Deployed on Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fsiddharthakatiyar%2Fportfolio)
+
 ## Tech Stack
 
 - **Framework**: [Next.js 16](https://nextjs.org/) (App Router)
