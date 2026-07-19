@@ -284,6 +284,7 @@ export const availableCommands = [
   "ls",
   "clear",
   "theme",
+  "open-post",
   "open contextos",
   "open throttlex",
   "open jsmon",

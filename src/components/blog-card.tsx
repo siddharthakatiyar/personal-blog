@@ -8,9 +8,10 @@ interface BlogCardProps {
   pubDate: string;
   slug: string;
   tags: string[];
+  readingTime: number;
 }
 
-export function BlogCard({ title, description, pubDate, slug, tags }: BlogCardProps) {
+export function BlogCard({ title, description, pubDate, slug, tags, readingTime }: BlogCardProps) {
   const formattedDate = new Date(pubDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -21,7 +22,11 @@ export function BlogCard({ title, description, pubDate, slug, tags }: BlogCardPr
     <Link href={`/blog/${slug}`} className="block h-full group">
       <Card className="h-full flex flex-col border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
         <CardHeader className="pb-3">
-          <div className="text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">{formattedDate}</div>
+          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">
+            <time dateTime={pubDate}>{formattedDate}</time>
+            <span>•</span>
+            <span>{readingTime} min read</span>
+          </div>
           <CardTitle className="text-lg md:text-xl group-hover:text-primary transition-colors leading-snug">
             {title}
           </CardTitle>

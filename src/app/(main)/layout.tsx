@@ -44,6 +44,11 @@ export const metadata: Metadata = {
     description: "Technical deep-dives on backend infrastructure, database engineering, and security tooling.",
     creator: "@siddharthakat25",
   },
+  alternates: {
+    types: {
+      "application/rss+xml": "/rss.xml",
+    },
+  },
 };
 
 export default function RootLayout({

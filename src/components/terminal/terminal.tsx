@@ -9,6 +9,9 @@ import {
   type FSNode,
 } from "@/lib/terminal-data";
 import { TerminalOutput } from "./terminal-output";
+import { TerminalToolbar } from "./terminal-toolbar";
+import { sounds } from "@/lib/sounds";
+import { SoundToggle } from "@/components/sound-toggle";
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -163,6 +166,8 @@ export function Terminal({ onBootComplete }: TerminalProps = {}) {
   const focusInput = () => inputRef.current?.focus();
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    sounds?.init();
+    
     if (e.key === "Enter") {
       if (input.trim() === "") {
         setHistory((h) => [...h, { command: "", cwd }]);
@@ -227,6 +232,12 @@ export function Terminal({ onBootComplete }: TerminalProps = {}) {
       e.preventDefault();
       setHistory([]);
     }
+  };
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    sounds?.init();
+    sounds?.playKeytick();
+    setInput(e.target.value);
   };
 
   const executeCommand = async (cmd: string) => {
@@ -396,9 +407,48 @@ e.g.  open contextos`;
       }
 
       case "blog": {
+        setHistory((h) => {
+          const newH = [...h];
+          newH[newH.length - 1] = {
+            ...newH[newH.length - 1],
+            output: "Fetching posts... [████████████████████] 100%",
+          };
+          return newH;
+        });
+
+        try {
+          const res = await fetch("/api/terminal-blog");
+          const posts = await res.json();
+          
+          if (!posts.length) {
+            output = "No posts found.";
+            break;
+          }
+          
+          let out = "Latest Articles\n\n";
+          posts.forEach((p: any) => {
+            const date = new Date(p.date).toLocaleDateString("en-US", { year: "numeric", month: "short", day: "numeric" }).toUpperCase();
+            out += `${date}  •  ${p.readingTime} min read\n`;
+            out += `${p.title}\n`;
+            out += `> open-post ${p.slug}\n\n`;
+          });
+          
+          out += "Type  open-post <slug>  to read.";
+          output = out;
+        } catch (e) {
+          output = "Failed to fetch posts.";
+        }
+        break;
+      }
+
+      case "open-post": {
+        if (!arg) {
+          output = "Usage: open-post <slug>\ne.g. open-post building-distributed-queues";
+          break;
+        }
         await delay(300);
-        output = "Redirecting to blog...\n\n✓ Success";
-        setTimeout(() => { window.location.href = "/blog"; }, 500);
+        output = `Opening post: ${arg}...\n\n✓ Redirecting`;
+        setTimeout(() => { window.open(`/blog/${arg}`, "_blank"); }, 500);
         break;
       }
 
@@ -562,12 +612,17 @@ Focus:    Distributed Systems`;
       onClick={focusInput}
     >
       {/* macOS window controls */}
-      <div className="h-10 bg-muted/50 border-b border-border/50 flex items-center px-4 gap-2 shrink-0">
-        <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
-        <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
-        <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
-        <div className="flex-1 text-center text-xs text-muted-foreground font-sans tracking-wide">
+      <div className="h-10 bg-muted/50 border-b border-border/50 flex items-center px-4 shrink-0 relative">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-full bg-[#ff5f56]" />
+          <div className="w-3 h-3 rounded-full bg-[#ffbd2e]" />
+          <div className="w-3 h-3 rounded-full bg-[#27c93f]" />
+        </div>
+        <div className="absolute left-1/2 -translate-x-1/2 text-xs text-muted-foreground font-sans tracking-wide pointer-events-none">
           siddhartha — bash — 80x24
+        </div>
+        <div className="ml-auto">
+          <SoundToggle />
         </div>
       </div>
 
@@ -605,7 +660,7 @@ Focus:    Distributed Systems`;
               ref={inputRef}
               type="text"
               value={input}
-              onChange={(e) => setInput(e.target.value)}
+              onChange={handleChange}
               onKeyDown={handleKeyDown}
               className="absolute inset-0 opacity-0 cursor-text"
               autoFocus
@@ -617,6 +672,7 @@ Focus:    Distributed Systems`;
           </div>
         )}
       </div>
+      <TerminalToolbar inputRef={inputRef} />
     </div>
   );
 }

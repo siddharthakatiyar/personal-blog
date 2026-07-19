@@ -47,6 +47,7 @@ export default function BlogPage() {
                 pubDate={post.meta.pubDate}
                 slug={post.slug}
                 tags={post.meta.tags}
+                readingTime={post.meta.readingTime}
               />
             ))}
           </div>

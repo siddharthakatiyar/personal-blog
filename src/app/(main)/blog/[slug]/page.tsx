@@ -5,11 +5,13 @@ import { MDXRemote } from "next-mdx-remote/rsc";
 import remarkGfm from "remark-gfm";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
-import { getPostBySlug, getPostSlugs } from "@/lib/blog";
+import { getPostBySlug, getPostSlugs, getRelatedPosts } from "@/lib/blog";
 import { TableOfContents } from "@/components/table-of-contents";
+import { BlogCard } from "@/components/blog-card";
 import { ReadingProgress } from "@/components/reading-progress";
 import { Comments } from "@/components/comments";
 import { Badge } from "@/components/ui/badge";
+import { MDXCodeBlock } from "@/components/mdx-code-block";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { useMDXComponents } from "../../../../../mdx-components";
@@ -80,10 +82,6 @@ export default async function BlogPostPage({ params }: Props) {
     day: "numeric",
   });
 
-  // Calculate reading time dynamically
-  const wordCount = post.content.split(/\s+/g).length;
-  const readingTime = Math.ceil(wordCount / 238); // Average reading speed
-
   const options = {
     mdxOptions: {
       remarkPlugins: [remarkGfm],
@@ -93,6 +91,10 @@ export default async function BlogPostPage({ params }: Props) {
       ],
     },
   };
+
+  const components = useMDXComponents({});
+
+  const relatedPosts = getRelatedPosts(post.slug, post.meta.tags, 2);
 
   const articleJsonLd = {
     "@context": "https://schema.org",
@@ -138,7 +140,7 @@ export default async function BlogPostPage({ params }: Props) {
             <div className="flex items-center gap-3 text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60 mb-4">
               <time dateTime={post.meta.pubDate}>{formattedDate}</time>
               <span>•</span>
-              <span>{readingTime} min read</span>
+              <span>{post.meta.readingTime} min read</span>
             </div>
             
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 text-balance leading-tight">
@@ -182,11 +184,14 @@ export default async function BlogPostPage({ params }: Props) {
 
         <div className="max-w-screen-xl mx-auto relative flex flex-col lg:flex-row lg:items-start lg:justify-center gap-12">
           <main className="w-full lg:w-auto max-w-[850px]">
+            
+            <MDXCodeBlock />
+
             <div className="prose prose-neutral dark:prose-invert max-w-none prose-base md:prose-lg">
               <MDXRemote 
                 source={post.content} 
                 options={options as any} 
-                components={useMDXComponents({})}
+                components={components}
               />
             </div>
             
@@ -212,6 +217,25 @@ export default async function BlogPostPage({ params }: Props) {
                 </div>
               </div>
             </div>
+
+            {relatedPosts.length > 0 && (
+              <div className="mt-16 pt-10 border-t border-border/50">
+                <h3 className="text-2xl font-bold mb-8">More from the blog</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
+                  {relatedPosts.map((rp) => (
+                    <BlogCard
+                      key={rp.slug}
+                      title={rp.meta.title}
+                      description={rp.meta.description}
+                      pubDate={rp.meta.pubDate}
+                      slug={rp.slug}
+                      tags={rp.meta.tags}
+                      readingTime={rp.meta.readingTime}
+                    />
+                  ))}
+                </div>
+              </div>
+            )}
             
             <div className="mt-12">
               <Comments />

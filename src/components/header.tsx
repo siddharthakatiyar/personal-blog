@@ -47,6 +47,7 @@ export function Header() {
           </Link>
         </div>
         <div className="flex items-center gap-2">
+          <ThemeToggle />
           <Sheet>
             <SheetTrigger
               render={
@@ -104,7 +105,6 @@ export function Header() {
               </div>
             </SheetContent>
           </Sheet>
-          <ThemeToggle />
         </div>
       </div>
     </header>

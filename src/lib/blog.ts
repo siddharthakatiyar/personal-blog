@@ -11,6 +11,7 @@ export interface PostMeta {
   tags: string[];
   status?: string;
   jsonLd?: any;
+  readingTime: number;
 }
 
 export interface Post {
@@ -38,6 +39,9 @@ export function getPostBySlug(slug: string): Post {
   const fileContents = fs.readFileSync(fullPath, "utf8");
   const { data, content } = matter(fileContents);
 
+  const wordCount = content.split(/\s+/g).length;
+  const readingTime = Math.ceil(wordCount / 238);
+
   return {
     slug: realSlug,
     meta: {
@@ -45,6 +49,7 @@ export function getPostBySlug(slug: string): Post {
       pubDate: data.publishedAt || data.pubDate || data.date || "",
       tags: data.tags || [],
       status: data.status || "published", // default to published for old posts
+      readingTime,
     } as PostMeta,
     content,
   };
@@ -67,4 +72,25 @@ export function getAllTags(): string[] {
     post.meta.tags?.forEach((tag) => tags.add(tag));
   });
   return Array.from(tags);
+}
+
+export function getRelatedPosts(currentSlug: string, tags: string[], limit = 2): Post[] {
+  const allPosts = getAllPosts().filter((post) => post.slug !== currentSlug);
+  
+  // Score posts by tag overlap
+  const scoredPosts = allPosts.map((post) => {
+    let score = 0;
+    post.meta.tags?.forEach((tag) => {
+      if (tags.includes(tag)) score += 1;
+    });
+    return { post, score };
+  });
+
+  // Sort by score (descending), then by date (descending)
+  scoredPosts.sort((a, b) => {
+    if (a.score !== b.score) return b.score - a.score;
+    return a.post.meta.pubDate > b.post.meta.pubDate ? -1 : 1;
+  });
+
+  return scoredPosts.slice(0, limit).map((sp) => sp.post);
 }

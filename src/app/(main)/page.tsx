@@ -201,6 +201,7 @@ export default async function Home() {
                 pubDate={post.meta.pubDate}
                 slug={post.slug}
                 tags={post.meta.tags}
+                readingTime={post.meta.readingTime}
               />
             ))}
           </div>
