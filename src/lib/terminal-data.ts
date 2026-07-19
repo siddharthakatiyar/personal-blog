@@ -290,4 +290,7 @@ export const availableCommands = [
   "open jsmon",
   "cd",
   "cat",
+  "repo",
+  "source",
 ];
+

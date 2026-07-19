@@ -12,6 +12,8 @@ import { TerminalOutput } from "./terminal-output";
 import { TerminalToolbar } from "./terminal-toolbar";
 import { sounds } from "@/lib/sounds";
 import { SoundToggle } from "@/components/sound-toggle";
+import { Icons } from "@/components/icons";
+import Link from "next/link";
 
 // ─── Types ──────────────────────────────────────────────────────────
 
@@ -147,7 +149,7 @@ export function Terminal({ onBootComplete }: TerminalProps = {}) {
 
       setHistory((h) => [
         ...h,
-        { command: "Welcome.\n\nType `help` to explore.", cwd: "~", isBoot: true },
+        { command: "Welcome.\n\nType `help` for commands, or `repo` for source code.", cwd: "~", isBoot: true },
       ]);
       setIsBooting(false);
       if (onBootComplete) {
@@ -298,7 +300,9 @@ export function Terminal({ onBootComplete }: TerminalProps = {}) {
         }
         const filePath = resolvePath(cwd, arg);
         const node = getNode(filePath);
-        if (!node) {
+        if (filePath.includes("src/components") || filePath.includes("terminal.tsx")) {
+          output = "Nice try! If you want to see the real code, check out the repository here:\n\n> repo";
+        } else if (!node) {
           output = `cat: ${arg}: No such file or directory`;
         } else if (node.type === "dir") {
           output = `cat: ${arg}: Is a directory`;
@@ -316,6 +320,16 @@ export function Terminal({ onBootComplete }: TerminalProps = {}) {
             output = node.content;
           }
         }
+        break;
+      }
+
+      case "repo":
+      case "source": {
+        await delay(300);
+        output = `Curious how this works?\nCheck out the source code on GitHub:\n\nhttps://github.com/siddharthakatiyar/portfolio\n\n✓ Opening repository...`;
+        setTimeout(() => {
+          window.open("https://github.com/siddharthakatiyar/portfolio", "_blank");
+        }, 800);
         break;
       }
 
@@ -348,6 +362,7 @@ stats        Numbers & current focus
 status       What I'm doing right now
 blog         Latest articles
 resume       Download resume
+repo/source  View source code
 github       Open GitHub
 linkedin     Open LinkedIn
 contact      Email me
@@ -621,7 +636,10 @@ Focus:    Distributed Systems`;
         <div className="absolute left-1/2 -translate-x-1/2 text-xs text-muted-foreground font-sans tracking-wide pointer-events-none">
           siddhartha — bash — 80x24
         </div>
-        <div className="ml-auto">
+        <div className="ml-auto flex items-center gap-2">
+          <Link href="https://github.com/siddharthakatiyar/portfolio" target="_blank" className="text-muted-foreground hover:text-foreground transition-colors" title="View Source on GitHub">
+            <Icons.gitHub className="h-[1.1rem] w-[1.1rem]" />
+          </Link>
           <SoundToggle />
         </div>
       </div>
