@@ -3,7 +3,7 @@ import { CornerDownLeft, Keyboard, Terminal, ArrowUp, ArrowDown } from "lucide-r
 import { cn } from "@/lib/utils";
 
 interface TerminalToolbarProps {
-  inputRef: React.RefObject<HTMLInputElement>;
+  inputRef: React.RefObject<HTMLInputElement | null>;
 }
 
 export function TerminalToolbar({ inputRef }: TerminalToolbarProps) {
