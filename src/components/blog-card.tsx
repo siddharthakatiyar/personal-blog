@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ViewCounter } from "@/components/view-counter";
 
 interface BlogCardProps {
   title: string;
@@ -26,6 +27,8 @@ export function BlogCard({ title, description, pubDate, slug, tags, readingTime 
             <time dateTime={pubDate}>{formattedDate}</time>
             <span>•</span>
             <span>{readingTime} min read</span>
+            <span>•</span>
+            <ViewCounter slug={slug} trackView={false} />
           </div>
           <CardTitle className="text-lg md:text-xl group-hover:text-primary transition-colors leading-snug">
             {title}

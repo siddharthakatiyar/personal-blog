@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { MDXCodeBlock } from "@/components/mdx-code-block";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
+import { ViewCounter } from "@/components/view-counter";
 import { useMDXComponents } from "../../../../../mdx-components";
 
 interface Props {
@@ -141,6 +142,8 @@ export default async function BlogPostPage({ params }: Props) {
               <time dateTime={post.meta.pubDate}>{formattedDate}</time>
               <span>•</span>
               <span>{post.meta.readingTime} min read</span>
+              <span>•</span>
+              <ViewCounter slug={slug} trackView={true} />
             </div>
             
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 text-balance leading-tight">
