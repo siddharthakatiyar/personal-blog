@@ -24,18 +24,25 @@ export function ViewCounter({ slug, trackView = false, className }: ViewCounterP
 
   useEffect(() => {
     if (trackView) {
-      // Register a view in the background
-      fetch(`/api/views/${slug}`, {
-        method: "POST",
-      })
-        .then((res) => res.json())
-        .then((newData) => {
-          // Optimistically update the UI with the new view count
-          if (newData && typeof newData.views === 'number') {
-            mutate(newData, false);
-          }
+      // Check if we already registered a view for this post in the current session
+      const hasViewed = sessionStorage.getItem(`viewed-${slug}`);
+      
+      if (!hasViewed) {
+        // Register a view in the background
+        fetch(`/api/views/${slug}`, {
+          method: "POST",
         })
-        .catch(console.error);
+          .then((res) => res.json())
+          .then((newData) => {
+            // Optimistically update the UI with the new view count
+            if (newData && typeof newData.views === 'number') {
+              mutate(newData, false);
+            }
+            // Mark as viewed for this session
+            sessionStorage.setItem(`viewed-${slug}`, "true");
+          })
+          .catch(console.error);
+      }
     }
   }, [slug, trackView, mutate]);
 
