@@ -21,7 +21,7 @@ export function BlogCard({ title, description, pubDate, slug, tags, readingTime 
   return (
     <Link href={`/blog/${slug}`} className="block h-full group">
       <Card className="h-full flex flex-col border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
-        <CardHeader className="pb-3">
+        <CardHeader className="pb-3 flex-grow">
           <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">
             <time dateTime={pubDate}>{formattedDate}</time>
             <span>•</span>
@@ -34,7 +34,7 @@ export function BlogCard({ title, description, pubDate, slug, tags, readingTime 
             {description}
           </CardDescription>
         </CardHeader>
-        <CardFooter className="pt-4 pb-6 flex-grow items-end">
+        <CardFooter className="pt-4 pb-6 mt-auto">
           <div className="flex flex-wrap gap-1.5">
             {tags?.slice(0, 4).map((tag) => (
               <Badge 
