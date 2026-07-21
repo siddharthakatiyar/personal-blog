@@ -1407,7 +1407,83 @@ Because every percentage point represented one fewer moment where another develo
 
 > "Why didn't it find that?"
 
+---
 
+### Then CI Broke Everything
+
+Eventually, I reached a point where every benchmark passed on my machine.
+
+Every repository.
+
+Every question.
+
+Everything looked green.
+
+I pushed the changes.
+
+Opened GitHub.
+
+Watched the CI pipeline start.
+
+And...
+
+everything failed.
+
+Not some tests.
+
+Every benchmark.
+
+The reported recall wasn't slightly worse.
+
+It was **zero**.
+
+Zero.
+
+The retrieval engine wasn't finding code.
+
+It was returning bizarre chunks that had nothing to do with the questions.
+
+For a few minutes, I genuinely questioned everything.
+
+Had I accidentally broken the index?
+
+Corrupted the database?
+
+Introduced a regression somewhere deep inside the retrieval engine?
+
+The answer turned out to be much stranger.
+
+ContextOS wasn't failing.
+
+It was simply...
+
+too fast.
+
+The CLI was behaving exactly as intended.
+
+`contextos init` returned immediately after launching the background daemon.
+
+On my machine, every repository had already been indexed dozens of times.
+
+By the time I asked a question, the database was warm.
+
+GitHub Actions had never seen those repositories before.
+
+The benchmark started asking questions...
+
+before a single file had been indexed.
+
+The retrieval engine wasn't wrong.
+
+It was searching an empty database.
+
+That bug taught me something I probably should have learned much earlier.
+
+Software doesn't run in the environment where it's written.
+
+It runs in the environment where it's deployed.
+
+And those are almost never the same.
 
 <ChapterBreak />
 
