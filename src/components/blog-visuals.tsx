@@ -123,6 +123,13 @@ export function ClaudeGrowth() {
   ];
   
   const [currentStep, setCurrentStep] = useState(0);
+
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentStep((prev) => (prev + 1) % steps.length);
+    }, 2500);
+    return () => clearInterval(timer);
+  }, [steps.length]);
   
   return (
     <div className="my-12 p-8 border border-border rounded-xl bg-card/30 flex flex-col items-center justify-center">
