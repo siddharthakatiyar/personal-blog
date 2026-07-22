@@ -4,7 +4,7 @@ import Image, { ImageProps } from "next/image";
 import { Callout } from "@/components/callout";
 import { StatCard, StatCards } from "@/components/stat-card";
 import { ComparisonTable, ComparisonHeader, ComparisonRow } from "@/components/comparison-table";
-import { ChapterBreak, PullQuote, Terminal, Timeline, BenchmarkCard, ArchitectureDiagram } from "@/components/blog";
+import { ChapterBreak, PullQuote, Terminal, Timeline, BenchmarkCard, ArchitectureDiagram, Notebook, Reflection, Evolution, RetrievalPipeline, ClaudeGrowth, TokenComparison } from "@/components/blog";
 
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -40,6 +40,12 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Timeline,
     BenchmarkCard,
     ArchitectureDiagram,
+    Notebook,
+    Reflection,
+    Evolution,
+    RetrievalPipeline,
+    ClaudeGrowth,
+    TokenComparison,
     ...components,
   };
 }

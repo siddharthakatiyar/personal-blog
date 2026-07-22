@@ -50,3 +50,6 @@ export function BenchmarkCard({ children }: { children?: React.ReactNode }) {
 export function ArchitectureDiagram({ children }: { children?: React.ReactNode }) {
   return <div className="p-4 border rounded-lg text-center text-muted-foreground my-8">{children || "ArchitectureDiagram Component"}</div>;
 }
+
+export { Notebook, Reflection, Evolution, RetrievalPipeline, ClaudeGrowth, TokenComparison } from './blog-visuals';
+
