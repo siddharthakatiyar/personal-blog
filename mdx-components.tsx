@@ -4,7 +4,7 @@ import Image, { ImageProps } from "next/image";
 import { Callout } from "@/components/callout";
 import { StatCard, StatCards } from "@/components/stat-card";
 import { ComparisonTable, ComparisonHeader, ComparisonRow } from "@/components/comparison-table";
-
+import { SystemDiagram, GraphDiagram, Tradeoff, TokenEfficiencyChart, CodeBlock, Quote, Timeline } from "@/components/technical-blog";
 // This file is required to use MDX in `app` directory.
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -33,6 +33,13 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ComparisonTable,
     ComparisonHeader,
     ComparisonRow,
+    SystemDiagram,
+    GraphDiagram,
+    Tradeoff,
+    TokenEfficiencyChart,
+    CodeBlock,
+    Quote,
+    Timeline,
     ...components,
   };
 }
