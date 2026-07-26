@@ -34,7 +34,7 @@ export function BlogCard({ title, description, pubDate, slug, tags, readingTime 
             {description}
           </CardDescription>
         </CardHeader>
-        <CardFooter className="pt-4 pb-6 flex-grow items-end">
+        <CardFooter className="pt-4 pb-6 mt-auto">
           <div className="flex flex-wrap gap-1.5">
             {tags?.slice(0, 4).map((tag) => (
               <Badge 
