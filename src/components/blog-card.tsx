@@ -1,6 +1,7 @@
 import Link from "next/link";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { ViewCounter } from "@/components/view-counter";
 
 interface BlogCardProps {
   title: string;
@@ -22,10 +23,12 @@ export function BlogCard({ title, description, pubDate, slug, tags, readingTime 
     <Link href={`/blog/${slug}`} className="block h-full group">
       <Card className="h-full flex flex-col border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
         <CardHeader className="pb-3">
-          <div className="flex items-center gap-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">
+          <div className="flex items-center flex-wrap gap-x-3 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">
             <time dateTime={pubDate}>{formattedDate}</time>
             <span>•</span>
             <span>{readingTime} min read</span>
+            <span>•</span>
+            <ViewCounter slug={slug} trackView={false} />
           </div>
           <CardTitle className="text-lg md:text-xl group-hover:text-primary transition-colors leading-snug">
             {title}
