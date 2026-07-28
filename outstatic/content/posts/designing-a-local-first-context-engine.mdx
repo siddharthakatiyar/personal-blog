@@ -165,9 +165,9 @@ When testing ContextOS against a traditional RAG approach (which relies on line 
 
 In a 100-query benchmark against the Redis 7.x C codebase, ContextOS achieved a **98% file-level recall** for exact-function queries and a **96% recall** for broad conceptual queries. 
 
-Crucially, it did this while averaging just **589 tokens per query**. 
+Crucially, it did this while averaging just **669 tokens per query**. 
 
-Token efficiency directly translates to lower latency, reduced API costs, and significantly less model confusion. A model analyzing 600 highly relevant tokens will consistently outperform a model drowning in 40,000 tokens of noisy, full-file context.
+Token efficiency directly translates to lower latency, reduced API costs, and significantly less model confusion. A model analyzing ~670 highly relevant tokens will consistently outperform a model drowning in 40,000 tokens of noisy, full-file context.
 
 ## Engineering Lessons and Tradeoffs
 
