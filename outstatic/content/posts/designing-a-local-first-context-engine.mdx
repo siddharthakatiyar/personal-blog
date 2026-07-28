@@ -60,7 +60,7 @@ This architecture works remarkably well for documentation, corporate wikis, and 
 When code is chunked by character count, function boundaries are destroyed. When retrieval relies solely on embeddings, deterministic symbol lookups become probabilistic guesses.
 </Quote>
 
-When a repository is arbitrarily sliced into 1,000-character chunks, the structural integrity of the code is lost. An LLM might receive the bottom half of a class definition, a random import block from another file, and a loosely related configuration snippet. The execution flow is fragmented, forcing the model to hallucinate the missing connections.
+When a repository is subjected to naive chunking by character count, the structural integrity of the code is lost. An LLM might receive the bottom half of a class definition, a random import block from another file, and a loosely related configuration snippet. The execution flow is fragmented, forcing the model to hallucinate the missing connections.
 
 While vector search answers the question *"What looks similar?"*, a coding assistant usually needs the answer to *"Where is this defined, and what does it call?"*
 
@@ -165,9 +165,11 @@ When testing ContextOS against a traditional RAG approach (which relies on line 
 
 In a 100-query benchmark against the Redis 7.x C codebase, ContextOS achieved a **98% file-level recall** for exact-function queries and a **96% recall** for broad conceptual queries. 
 
-Crucially, it did this while averaging just **669 tokens per query**. 
+Crucially, it did this while averaging just **589 tokens per query**. 
 
-Token efficiency directly translates to lower latency, reduced API costs, and significantly less model confusion. A model analyzing ~670 highly relevant tokens will consistently outperform a model drowning in 40,000 tokens of noisy, full-file context.
+When applied to modern, polymorphic web architectures (like React or Next.js), the footprint drops even further—averaging just **~280 tokens per query** with 100% accuracy, thanks to aggressive containment deduplication.
+
+Token efficiency directly translates to lower latency, reduced API costs, and significantly less model confusion. A model analyzing ~600 highly relevant tokens will consistently outperform a model drowning in 40,000 tokens of noisy, full-file context.
 
 ## Engineering Lessons and Tradeoffs
 
