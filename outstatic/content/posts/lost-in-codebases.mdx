@@ -7,7 +7,7 @@ author:
 slug: 'lost-in-codebases'
 description: "Modern large language models are becoming dramatically better at reasoning about code. Yet, developers still struggle to get consistent, accurate answers from AI coding assistants."
 coverImage: '/images/lost-in-codebases-fotis.jpg'
-publishedAt: '2026-08-04T22:30:00.000+05:30'
+publishedAt: '2026-08-06T22:30:00.000+05:30'
 tags:
   - "ai"
   - "architecture"
@@ -51,6 +51,8 @@ While embeddings are great at finding conceptual similarities, they struggle wit
 
 ### 3. Context Compression
 Retrieving the right context is only half the problem. If you send 50 relevant chunks to an LLM, you dilute its attention. ContextOS implements a query-aware compiler that compresses context: the most important nodes are sent in full, while lower-scoring nodes are compressed into single-line stubs (e.g., `interface User — path/types.ts:12-40`). 
+
+![ContextOS Query Expansion](/images/query-where.gif)
 
 ## The Results
 
