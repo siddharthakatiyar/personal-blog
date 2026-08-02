@@ -12,6 +12,7 @@ import { ReadingProgress } from "@/components/reading-progress";
 import { Comments } from "@/components/comments";
 import { Badge } from "@/components/ui/badge";
 import { MDXCodeBlock } from "@/components/mdx-code-block";
+import { ViewCounter } from "@/components/view-counter";
 import Link from "next/link";
 import { Icons } from "@/components/icons";
 import { useMDXComponents } from "../../../../../mdx-components";
@@ -149,10 +150,12 @@ export default async function BlogPostPage({ params }: Props) {
           )}
 
           <header className="mt-4">
-            <div className="flex items-center gap-3 text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60 mb-4">
+            <div className="flex items-center flex-wrap gap-x-3 gap-y-2 text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60 mb-4">
               <time dateTime={post.meta.pubDate}>{formattedDate}</time>
               <span>•</span>
               <span>{post.meta.readingTime} min read</span>
+              <span>•</span>
+              <ViewCounter slug={slug} trackView={true} />
             </div>
             
             <h1 className="text-2xl md:text-3xl font-bold tracking-tight mb-6 text-balance leading-tight">
