@@ -48,6 +48,7 @@ export default function BlogPage() {
                 slug={post.slug}
                 tags={post.meta.tags}
                 readingTime={post.meta.readingTime}
+                coverImage={post.meta.coverImage}
               />
             ))}
           </div>

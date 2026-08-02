@@ -180,6 +180,18 @@ export default async function BlogPostPage({ params }: Props) {
               </div>
             </div>
           </header>
+          
+          {post.meta.coverImage && (
+            <div className="w-full relative aspect-[2/1] rounded-2xl overflow-hidden mb-12 border border-border/50 shadow-md">
+              <Image
+                src={post.meta.coverImage}
+                alt={post.meta.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
         </div>
 
         <div className="max-w-screen-xl mx-auto relative flex flex-col lg:flex-row lg:items-start lg:justify-center gap-12">
@@ -231,6 +243,7 @@ export default async function BlogPostPage({ params }: Props) {
                       slug={rp.slug}
                       tags={rp.meta.tags}
                       readingTime={rp.meta.readingTime}
+                      coverImage={rp.meta.coverImage}
                     />
                   ))}
                 </div>

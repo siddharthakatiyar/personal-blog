@@ -9,9 +9,10 @@ interface BlogCardProps {
   slug: string;
   tags: string[];
   readingTime: number;
+  coverImage?: string;
 }
 
-export function BlogCard({ title, description, pubDate, slug, tags, readingTime }: BlogCardProps) {
+export function BlogCard({ title, description, pubDate, slug, tags, readingTime, coverImage }: BlogCardProps) {
   const formattedDate = new Date(pubDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -33,6 +34,15 @@ export function BlogCard({ title, description, pubDate, slug, tags, readingTime 
           <CardDescription className="mt-2 line-clamp-3 text-sm leading-relaxed">
             {description}
           </CardDescription>
+          {coverImage && (
+            <div className="mt-4 relative w-full h-32 md:h-40 rounded-md overflow-hidden border border-border/50">
+              <img
+                src={coverImage}
+                alt={title}
+                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+          )}
         </CardHeader>
         <CardFooter className="pt-4 pb-6 flex-grow items-end">
           <div className="flex flex-wrap gap-1.5">
