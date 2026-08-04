@@ -1,0 +1,192 @@
+---
+title: 'Designing a Local-First Context Engine for AI Coding Assistants'
+status: 'published'
+author:
+  name: 'Siddhartha Katiyar'
+  picture: 'https://avatars.githubusercontent.com/u/108502395?v=4'
+slug: 'designing-a-local-first-context-engine'
+description: "Why AI coding assistants don't need more context—they need better context."
+coverImage: '/images/contextos-cover.png'
+publishedAt: '2026-08-04T12:00:00.000Z'
+tags:
+  - "ai"
+  - "search"
+  - "architecture"
+  - "sqlite"
+  - "ast"
+  - "retrieval"
+  - "contextos"
+---
+
+Modern large language models are becoming dramatically better at reasoning about code. Context windows are expanding from a few thousand tokens to millions. Yet, developers still struggle to get consistent, accurate answers from AI coding assistants when working on large, real-world repositories.
+
+The prevailing assumption has been that simply feeding more files into larger context windows will solve the problem. It hasn't. 
+
+This is not primarily a model reasoning problem. It is a retrieval problem.
+
+Repositories are deeply structured software systems, not flat collections of text documents. When we treat code like natural language during the retrieval phase, we discard the very structure that makes the code understandable. ContextOS was built on a simple thesis: AI coding assistants don't need more context—they need *better* context.
+
+<hr />
+
+## Why Code Retrieval Is Different
+
+In natural language search, semantic similarity is the gold standard. If a user searches for "how to reset a password," returning an article titled "Account Recovery Steps" is a successful retrieval. The exact words do not matter as long as the underlying meaning aligns.
+
+Code retrieval is fundamentally different.
+
+If a developer asks an AI assistant: *"Where is the `AuthMiddleware` implemented?"*
+
+They do not want *"something related to authentication"* or *"a generic JWT guide."* They want the exact `AuthMiddleware` class. Immediately. Deterministically.
+
+<Tradeoff title="Precision vs. Recall">
+  In traditional document retrieval, optimizing for recall (finding all loosely related documents) is often preferred. In software engineering, precision is paramount. Sending five loosely related files to an LLM dilutes its attention and wastes its token budget. Sending the single exact function body it needs guarantees a correct answer.
+</Tradeoff>
+
+Software is built on exact symbol lookups, explicit imports, defined interfaces, and strict execution graphs. When an AI needs to understand how a component works, it must traverse these explicit relationships. Semantic similarity alone cannot reliably trace a function call through five layers of abstraction if the function names don't share linguistic similarities.
+
+## The Flaws in Existing Retrieval Pipelines
+
+The standard architecture used by most AI retrieval systems today (often called RAG—Retrieval-Augmented Generation) follows a predictable pipeline:
+
+1. Read all repository files.
+2. Chunk them arbitrarily by character count.
+3. Generate vector embeddings for each chunk.
+4. Store them in a vector database.
+5. Retrieve chunks using cosine similarity against the user's prompt.
+
+This architecture works remarkably well for documentation, corporate wikis, and natural language. However, it degrades rapidly on software repositories.
+
+<Quote>
+When code is chunked by character count, function boundaries are destroyed. When retrieval relies solely on embeddings, deterministic symbol lookups become probabilistic guesses.
+</Quote>
+
+When a repository is subjected to naive chunking by character count, the structural integrity of the code is lost. An LLM might receive the bottom half of a class definition, a random import block from another file, and a loosely related configuration snippet. The execution flow is fragmented, forcing the model to hallucinate the missing connections.
+
+While vector search answers the question *"What looks similar?"*, a coding assistant usually needs the answer to *"Where is this defined, and what does it call?"*
+
+## Design Principles of ContextOS
+
+ContextOS was designed specifically to index and retrieve software structures. The architecture is guided by four core principles.
+
+### Local-First
+
+ContextOS runs entirely locally. It uses SQLite. There is no external vector database to provision, no cloud indexing service to authenticate against, and no external infrastructure dependency. 
+
+For developer tooling, offline capability and zero-latency access are critical. Developers work on airplanes, in secure environments, and on proprietary codebases. A context engine must live alongside the code it indexes.
+
+### Deterministic
+
+If you query a repository for a specific symbol today, you should get the exact same ranking tomorrow. 
+
+Embeddings can sometimes yield unpredictable results based on subtle phrasing changes in the query. By prioritizing lexical and structural indexing, ContextOS ensures that a search for a class name deterministically returns that class. Reproducibility builds trust in developer tools.
+
+### Structure-Aware
+
+Files in a repository are not isolated islands; they are nodes in a connected graph. 
+
+Functions call other functions. Interfaces have concrete implementations. Routes depend on middleware. Retrieval should understand these relationships natively rather than relying on the LLM to stitch them together post-retrieval.
+
+### Incremental
+
+Repositories evolve continuously. Rebuilding an entire index on every file save is computationally wasteful and drains battery life. 
+
+ContextOS utilizes a persistent background daemon and file watchers. When a file changes, only the affected symbols and AST nodes are updated in the SQLite index. The index remains continuously warm without blocking the developer's workflow.
+
+<hr />
+
+## Architecture Walkthrough
+
+To achieve these principles, ContextOS replaces the standard chunk-and-embed pipeline with a structural pipeline.
+
+<SystemDiagram />
+
+### AST Extraction
+
+Instead of blindly chunking by characters, ContextOS parses the repository using Tree-sitter. It extracts functions, classes, interfaces, and methods as discrete, logical chunks. A 50-line function becomes a single chunk. 
+
+### The Semantic Graph and SQLite FTS5
+
+The extracted symbols are stored in a SQLite database utilizing the FTS5 (Full-Text Search) extension. We use the Porter stemming algorithm and operator-preserving sanitizers to ensure exact matches on identifiers, variables, and filenames are lightning fast.
+
+<Callout type="info">
+By storing the AST relationships, we create a semantic graph within SQLite. A class chunk inherently knows which method chunks belong to it, allowing for intelligent deduplication during retrieval.
+</Callout>
+
+### Why BM25 Instead of Starting With Embeddings
+
+This is perhaps the most heavily debated architectural decision in ContextOS. 
+
+Why use BM25 (via SQLite FTS5) as the primary retrieval mechanism instead of vector embeddings?
+
+Embeddings are exceptionally good at answering: *"What conceptually resembles this prompt?"*
+BM25 is exceptionally good at answering: *"Where exactly is this string or identifier located?"*
+
+In code retrieval, exact lexical matching often matters more than conceptual matching. If an error stack trace points to `DatabaseConnector.initialize()`, the optimal retrieval mechanism is an exact symbol lookup for that specific string, not a semantic search for "database startup routines."
+
+Embeddings remain highly useful—ContextOS supports them as a fallback via a local MiniLM model. When keyword confidence is low, the system fuses embedding kNN results using Reciprocal Rank Fusion (RRF). However, embeddings are treated as a complement to lexical search, not the foundation.
+
+## AST and Graph Expansion
+
+Retrieval in ContextOS does not stop after finding the first lexical match. 
+
+Software understanding requires traversing the call graph. If an LLM needs to fix a bug in an authentication route, providing only the route definition is insufficient.
+
+<GraphDiagram />
+
+When ContextOS retrieves a seed node (e.g., `router.post('/login')`), it traverses the AST relationships. It finds that the route calls the `login()` function. It retrieves `login()`, which in turn calls `validateJWT()`, which references a `config.JWT_SECRET`. 
+
+By walking this graph, ContextOS builds a complete, cohesive execution context. Graph expansion improves completeness while strictly avoiding the need to load entire files into the context window.
+
+## Context Compression
+
+Retrieving the right context is only half the problem. The retrieved context must fit inside a strict token budget before being passed to the LLM. 
+
+Context compression is a distinct engineering challenge rarely addressed by standard AI tooling. If the FTS5 query and graph expansion return 50 relevant chunks, they cannot all be sent to the model.
+
+ContextOS implements a query-aware tiered compiler:
+
+1. **Top-K Full Bodies**: The highest-scoring chunks are rendered in their entirety.
+2. **Path-Line Stubs**: Lower-scoring but relevant chunks are compressed into single-line stubs (e.g., `symbol — path/file.ts:12-84`).
+3. **Containment Dedup**: If a class outline and its methods both survive ranking, the oversized class body yields to the specific methods, preventing token duplication.
+
+This approach preserves the execution flow and awareness of surrounding symbols while aggressively pruning irrelevant implementation details. Context compression is a retrieval problem, not an LLM problem.
+
+<hr />
+
+## Benchmarking Precision and Efficiency
+
+Subjective evaluation ("it feels better") is insufficient for retrieval systems. We built an automated benchmarking suite to evaluate ContextOS across real engineering questions on multiple open-source repositories.
+
+Our primary metrics are **retrieval accuracy** (did it find the right file/symbol?) and **token usage** (how much context pollution was introduced?).
+
+<TokenEfficiencyChart />
+
+When testing ContextOS against a traditional RAG approach (which relies on line hits followed by whole-file reads), the token efficiency gains were massive. 
+
+In a 100-query benchmark against the Redis 7.x C codebase, ContextOS achieved a **98% file-level recall** for exact-function queries and a **96% recall** for broad conceptual queries. 
+
+Crucially, it did this while averaging just **589 tokens per query**. 
+
+When applied to modern, polymorphic web architectures (like React or Next.js), the footprint drops even further—averaging just **~280 tokens per query** with 100% accuracy, thanks to aggressive containment deduplication.
+
+Token efficiency directly translates to lower latency, reduced API costs, and significantly less model confusion. A model analyzing ~600 highly relevant tokens will consistently outperform a model drowning in 40,000 tokens of noisy, full-file context.
+
+## Engineering Lessons and Tradeoffs
+
+Building ContextOS surfaced several complex edge cases that fundamentally altered the architecture.
+
+**The Multiple Daemon Problem**
+Initially, running `contextos query` from different terminal tabs would spawn multiple instances of the indexing daemon. This led to aggressive SQLite database locking and `SQLITE_BUSY` errors. We had to implement a strict IPC handshake using named pipes (and domain sockets on Unix) to ensure only a single daemon process coordinates writes, while CLI instances act as thin clients.
+
+**Incremental Indexing Edge Cases**
+File watchers are notoriously unreliable across different operating systems. We encountered issues where rapid git branch switching would overwhelm the file watcher, causing the index to fall out of sync with the filesystem. To mitigate this, ContextOS implements a debounced, batch-processing queue that can fall back to a full directory checksum scan if the watcher drops events.
+
+## Conclusion
+
+The trajectory of AI coding assistants is currently defined by a race toward larger context windows. While feeding an entire repository into a multi-million token window is technically possible, it is computationally inefficient, high-latency, and prone to the "lost in the middle" phenomenon.
+
+ContextOS proves that the alternative is not only viable but superior. By treating repositories as structured graphs, utilizing deterministic lexical search, and aggressively compressing context, we can provide AI models with surgical precision. 
+
+Better retrieval. Better structure. Better context infrastructure. 
+
+These architectural foundations will become increasingly critical as AI-assisted software engineering matures. The models are ready; it is time our retrieval infrastructure caught up.
