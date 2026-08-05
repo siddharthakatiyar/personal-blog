@@ -1,0 +1,72 @@
+---
+title: 'Why AI Coding Agents Get Lost in Large Codebases'
+status: 'published'
+author:
+  name: 'Siddhartha Katiyar'
+  picture: 'https://avatars.githubusercontent.com/u/108502395?v=4'
+slug: 'lost-in-codebases'
+description: "Modern large language models are becoming dramatically better at reasoning about code. Yet, developers still struggle to get consistent, accurate answers from AI coding assistants."
+coverImage: '/images/lost-in-codebases-fotis.jpg'
+publishedAt: '2026-08-06T22:30:00.000+05:30'
+tags:
+  - "ai"
+  - "architecture"
+  - "software-engineering"
+  - "mcp"
+---
+
+Modern large language models are becoming dramatically better at reasoning about code. Context windows are expanding from a few thousand tokens to millions. Yet, developers still struggle to get consistent, accurate answers from AI coding assistants when working on large, real-world repositories.
+
+If you've ever watched an agent like Claude Desktop or Cursor try to debug a complex issue in a new repository, you've likely witnessed the "Grep Loop of Despair":
+
+1. The agent runs `grep -r "AuthService" .`
+2. It gets 500 results.
+3. It runs `cat` on three random files.
+4. It reads 40,000 tokens of irrelevant configuration and test data.
+5. It hallucinates a fix that doesn't compile.
+
+The prevailing assumption has been that simply feeding more files into larger context windows will solve the problem. It hasn't. 
+
+This is not a model reasoning problem. It is a retrieval problem.
+
+## The Flaws of "Chunk and Embed" for Code
+
+The standard architecture used by most AI retrieval systems today (RAG) follows a predictable pipeline: read the text, chunk it arbitrarily by character count, generate vector embeddings, and search via cosine similarity.
+
+This architecture works remarkably well for documentation and corporate wikis. However, it degrades rapidly on software repositories. 
+
+When code is chunked by character count, function boundaries are destroyed. When retrieval relies solely on embeddings, deterministic symbol lookups become probabilistic guesses.
+
+If a developer asks an AI assistant: *"Where is the `AuthMiddleware` implemented?"* they do not want *"something related to authentication."* They want the exact `AuthMiddleware` class. Immediately. Deterministically.
+
+## Introducing ContextOS
+
+I built [ContextOS](https://github.com/siddharthakatiyar/ContextOS) to solve this exact problem. It is a local-first context engine designed specifically to index and retrieve software structures for AI agents.
+
+### 1. AST-Aware Extraction
+Instead of blindly chunking by characters, ContextOS parses the repository using Tree-sitter. It extracts functions, classes, interfaces, and methods as discrete, logical chunks. A 50-line function becomes a single chunk. The structural integrity of the code is preserved.
+
+### 2. BM25 over Embeddings
+While embeddings are great at finding conceptual similarities, they struggle with exact symbol lookups. ContextOS flips the standard paradigm: it uses SQLite FTS5 (BM25) as the primary retrieval mechanism for deterministic lexical search, and falls back to a local MiniLM ONNX model for semantic matching only when necessary.
+
+### 3. Context Compression
+Retrieving the right context is only half the problem. If you send 50 relevant chunks to an LLM, you dilute its attention. ContextOS implements a query-aware compiler that compresses context: the most important nodes are sent in full, while lower-scoring nodes are compressed into single-line stubs (e.g., `interface User — path/types.ts:12-40`). 
+
+![ContextOS Query Expansion](/images/query-where.gif)
+
+## The Results
+
+In a 100-query benchmark against the Redis 7.x C codebase, ContextOS achieved a 98% file-level recall for exact-function queries. Crucially, it did this while averaging just **589 tokens per query**.
+
+For modern web frameworks like React and Next.js, the context footprint drops even further—averaging just ~280 tokens per query with 100% accuracy.
+
+Token efficiency directly translates to lower latency, reduced API costs, and significantly less model confusion. A model analyzing ~300 highly relevant tokens will consistently outperform a model drowning in 40,000 tokens of noisy, full-file context.
+
+ContextOS operates as a Model Context Protocol (MCP) server, meaning you can plug it directly into Cursor, Claude Desktop, and any other MCP-compliant client today. 
+
+Stop letting your AI drown in grep output. Give it the context engine it deserves. 
+
+Check out the repository on [GitHub](https://github.com/siddharthakatiyar/ContextOS).
+
+---
+*Cover Photo by [Fotis Fotopoulos](https://unsplash.com/@ffstop?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText) on [Unsplash](https://unsplash.com/photos/black-remote-control-on-red-table-6sAl6aQ4OWI?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText)*

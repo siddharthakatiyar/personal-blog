@@ -10,9 +10,10 @@ interface BlogCardProps {
   slug: string;
   tags: string[];
   readingTime: number;
+  coverImage?: string;
 }
 
-export function BlogCard({ title, description, pubDate, slug, tags, readingTime }: BlogCardProps) {
+export function BlogCard({ title, description, pubDate, slug, tags, readingTime, coverImage }: BlogCardProps) {
   const formattedDate = new Date(pubDate).toLocaleDateString("en-US", {
     year: "numeric",
     month: "short",
@@ -23,6 +24,15 @@ export function BlogCard({ title, description, pubDate, slug, tags, readingTime 
     <Link href={`/blog/${slug}`} className="block h-full group">
       <Card className="h-full flex flex-col border-border/50 bg-card/50 backdrop-blur-sm transition-all duration-300 hover:border-primary/50 hover:shadow-lg hover:shadow-primary/5 hover:-translate-y-1">
         <CardHeader className="pb-3">
+          {coverImage && (
+            <div className="mb-4 relative w-full h-32 md:h-40 rounded-md overflow-hidden border border-border/50">
+              <img
+                src={coverImage}
+                alt={title}
+                className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-105"
+              />
+            </div>
+          )}
           <div className="flex items-center flex-wrap gap-x-3 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-muted-foreground/50 mb-2">
             <time dateTime={pubDate}>{formattedDate}</time>
             <span>•</span>

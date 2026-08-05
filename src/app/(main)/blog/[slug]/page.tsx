@@ -137,6 +137,18 @@ export default async function BlogPostPage({ params }: Props) {
             Back to posts
           </Link>
           
+          {post.meta.coverImage && (
+            <div className="w-full relative aspect-[2/1] rounded-2xl overflow-hidden mb-10 border border-border/50 shadow-md">
+              <Image
+                src={post.meta.coverImage}
+                alt={post.meta.title}
+                fill
+                className="object-cover"
+                priority
+              />
+            </div>
+          )}
+
           <header className="mt-4">
             <div className="flex items-center flex-wrap gap-x-3 gap-y-2 text-[10px] uppercase tracking-wider font-semibold text-muted-foreground/60 mb-4">
               <time dateTime={post.meta.pubDate}>{formattedDate}</time>
@@ -234,6 +246,7 @@ export default async function BlogPostPage({ params }: Props) {
                       slug={rp.slug}
                       tags={rp.meta.tags}
                       readingTime={rp.meta.readingTime}
+                      coverImage={rp.meta.coverImage}
                     />
                   ))}
                 </div>

@@ -24,7 +24,7 @@ export default function BlogPage() {
       </div>
 
       <div className="flex flex-col gap-10">
-        <div className="flex items-center gap-3 overflow-x-auto pb-4 scrollbar-hide border-b border-border/50">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 pb-4 border-b border-border/50">
           <span className="text-xs font-semibold uppercase tracking-wider text-muted-foreground/70 shrink-0 mr-1">Tags:</span>
           {tags?.map((tag) => (
             <Badge 
@@ -48,6 +48,7 @@ export default function BlogPage() {
                 slug={post.slug}
                 tags={post.meta.tags}
                 readingTime={post.meta.readingTime}
+                coverImage={post.meta.coverImage}
               />
             ))}
           </div>

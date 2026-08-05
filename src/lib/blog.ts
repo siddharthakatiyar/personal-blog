@@ -12,6 +12,7 @@ export interface PostMeta {
   status?: string;
   jsonLd?: any;
   readingTime: number;
+  coverImage?: string;
 }
 
 export interface Post {
